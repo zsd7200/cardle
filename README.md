@@ -11,6 +11,7 @@ MONGODB_URI=
 ```
 
 `POKETCG_API_KEY` can be obtained [from here](https://dev.pokemontcg.io/).
+
 `MONGODB_URI` is the connection string to your MongoDB database. A free-tier Mongo database can be made using [MongoDB Cloud Services](https://www.mongodb.com/products/platform/cloud).
 
 Then, run install command:
