@@ -68,29 +68,49 @@ export async function Card(props: CardProps | undefined = undefined) {
   
   return (
     <>
-      <div className="flex justify-around items-center border-2">
+      <div className="flex justify-center items-center gap-[50px]">
         <div className="overflow-hidden">
           <div className="overflow-hidden max-h-[700px] w-fit">
             <img src={cardData.images.large ?? cardData.images.small} className="blur-3xl h-[700px] pointer-events-none" />
           </div>
         </div>
-        <div className="flex flex-col justify-center w-1/2 border-2 border-red-500">
-          <p>{cardData.supertype}</p>
-          <ul>
-            {cardData.subtypes.map(type => (
-              <li key={type}>
-                <span>{type}</span>
-              </li>
-            ))}
-          </ul>
-          <p>{cardData.set.name}</p>
-          <p>{cardData.rarity}</p>
-          <input list="mons" name="mons"></input>
-          <datalist id="mons">
-            {monNames.map(name => (
-              <option key={name} value={name}></option>
-            ))}
-          </datalist>
+        <div className="flex flex-col w-1/3 text-lg rounded-lg px-[15px] py-[10px] shadow-[0px_0px_13px_8px_rgba(128,_128,_128,_0.1)] bg-gray-700">
+          <div className="flex flex-col pb-[15px]">
+            <div className="flex justify-between">
+              <span>Classification:</span>
+              <span>{cardData.supertype}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Subclasses:</span>
+              <div>
+                {cardData.subtypes.map((type: string, i: number) => (
+                  <span key={type}>{ (i && (type.trim().length > 1) ? ', ' : '' + type) }</span>
+                ))}
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <span>Set:</span>
+              <span>{cardData.set.name}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Rarity:</span>
+              <span>{cardData.rarity}</span>
+            </div>
+          </div>
+          <div className="flex justify-between">
+            <form>
+              <input list="mons" name="mons" className="text-black"></input>
+              <datalist id="mons">
+                {monNames.map(name => (
+                  <option key={name} value={name}></option>
+                ))}
+              </datalist>
+            </form>
+            <div>
+              <span>Guesses Left: </span>
+              <span>3</span>
+            </div>
+          </div>
         </div>
       </div>
     </>
