@@ -1,11 +1,12 @@
 import dbConnect from "@/components/db/connect";
 import COTD from "@/models/COTD";
-import { getRandomCard } from "../tcg/card";
+import { getRandomCard } from "@/components/tcg/card";
+import { format } from 'date-fns';
 
-async function populate(date: Date | undefined = undefined) {
+async function populate(date: string | undefined = undefined) {
   await dbConnect();
   try {
-    const currDate = date ?? new Date(Date.now()).toISOString().split('T')[0];
+    const currDate = date ?? format(new Date(), 'yyyy-MM-dd');
     const card = await getRandomCard();
     const modelData = {
       card_id: card.id,
@@ -20,14 +21,15 @@ async function populate(date: Date | undefined = undefined) {
   }
 }
 
-export async function getCotd() {
+export async function getCotd(date: string | undefined = undefined) {
   await dbConnect();
   try {
-    const currDate = new Date(Date.now()).toISOString().split('T')[0];
+    const currDate = date ?? format(new Date(), 'yyyy-MM-dd');
+    console.log();
     let cotd = await COTD.findOne({ date: currDate }).exec();
 
     if (!cotd) {
-      cotd = await populate();
+      cotd = await populate(date);
     }
 
     return cotd;

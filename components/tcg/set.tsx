@@ -1,4 +1,4 @@
-import fetchData from "@/components/fetch-data";
+import fetchData from "@/components/util/fetch-data";
 
 type InnerSetData = {
   id: string,
