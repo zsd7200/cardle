@@ -1,6 +1,6 @@
 import fetchData from "@/components/util/fetch-data";
 import { getRandomSetId } from "@/components/tcg/set";
-import { PokemonCollectionData, getMonNames } from "@/components/db/pokemon";
+import { getMonNames } from "@/components/db/pokemon";
 
 export type InnerCardData = {
   id: string,
@@ -65,7 +65,7 @@ export async function getRandomCard(setId: string | undefined = undefined) {
 export async function Card(props: CardProps | undefined = undefined) {
   const cardData = props?.data ?? await getRandomCard();
   const monNames: Array<string> = await getMonNames();
-  
+
   return (
     <>
       <div className="flex justify-center items-center gap-[50px]">
@@ -84,7 +84,7 @@ export async function Card(props: CardProps | undefined = undefined) {
               <span>Subclasses:</span>
               <div>
                 {cardData.subtypes.map((type: string, i: number) => (
-                  <span key={type}>{ (i && (type.trim().length > 1) ? ', ' : '' + type) }</span>
+                  <span key={type}>{ (i ? ', ' : '') + type }</span>
                 ))}
               </div>
             </div>
