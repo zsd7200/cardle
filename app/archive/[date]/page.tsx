@@ -4,14 +4,11 @@ import { getCotd } from "@/components/db/cotd";
 import { redirect } from 'next/navigation';
 import { format } from 'date-fns';
 
-type PageInfo = {
-  params: {
-    date: string,
-  },
-}
+type Params = Promise<{ date: string }>;
 
-export default async function ArchiveDate({ params } : PageInfo) {
-  const { date } = await params;
+export default async function ArchiveDate(props: { params: Params }) {
+  const params =  await props.params;
+  const date = params.date;
   const dateArr: Array<string> = date.split('-');
   if (date.length !== 10 || dateArr.length !== 3 || parseInt(dateArr[0]) < 2025) {
     return (
