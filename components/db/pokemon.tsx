@@ -2,7 +2,7 @@ import dbConnect from "@/components/db/connect";
 import Pokemon from "@/models/pokemon";
 import fetchData from "@/components/util/fetch-data";
 
-export type PokemonCollectionData = {
+type PokemonCollectionData = {
   id: number,
   name: string,
   api_url: string,
@@ -47,10 +47,10 @@ async function populate(date: Date | undefined = undefined) {
   }
 }
 
-export async function getMonCollection() {
+async function getMonCollection() {
   await dbConnect();
   try {
-    const monCollection: Array<PokemonCollectionData> = await Pokemon.find().sort('id').exec();
+    const monCollection: Array<PokemonCollectionData> = await Pokemon.find().exec();
     const lastMon: PokemonCollectionData = monCollection[monCollection.length - 1];
 
     if (lastMon && lastMon.updated) {
@@ -69,7 +69,7 @@ export async function getMonCollection() {
 
     // only poll pokeapi if 30 days has passed and if count has changed
     const count = await getCount();
-    if (!lastMon || lastMon.id < count) {
+    if (!lastMon || monCollection.length < count) {
       await populate();
       const updatedCollection: Array<PokemonCollectionData> = await Pokemon.find().exec();
       return updatedCollection;
@@ -81,23 +81,63 @@ export async function getMonCollection() {
   }
 }
 
-export async function getMonNames() {
-  const monNames: Array<string> = [];
-  const monCollection: Array<PokemonCollectionData> = await getMonCollection() as Array<PokemonCollectionData>;
+let shouldFilterName = (nameArr: Array<string>) => {
+  if (nameArr.length == 2) {
+    if (
+      // regional forms
+      nameArr[1] == 'alola' ||
+      nameArr[1] == 'galar' ||
+      nameArr[1] == 'hisui' ||
+      nameArr[1] == 'paldea' ||
 
-  monCollection.forEach((mon) => {
-    const splitName: Array<string> = mon.name.split('-');
-    let name = splitName[0][0].toUpperCase() + splitName[0].substr(1);
-
-    if (splitName.length > 1) {
-      for (let i = 1; i < splitName.length; i++) {
-        name += '-'
-        name += splitName[i][0].toUpperCase() + splitName[i].substr(1);
-      }
+      // paradox mons and treasures of ruin
+      nameArr[1] == 'tusk' ||
+      nameArr[1] == 'tail' ||
+      nameArr[1] == 'bonnet' ||
+      nameArr[1] == 'mane' ||
+      nameArr[1] == 'wing' ||
+      nameArr[1] == 'shocks' ||
+      nameArr[0] == 'iron' ||
+      nameArr[1] == 'chien' ||
+      nameArr[1] == 'pao' ||
+      nameArr[1] == 'lu' ||
+      nameArr[1] == 'yu' ||
+      nameArr[1] == 'moon' ||
+      nameArr[1] == 'wake' ||
+      nameArr[1] == 'fire' ||
+      nameArr[1] == 'bolt'
+    ) {
+      return false;
     }
-    monNames.push(name);
-  });
+    
+  }
 
-  monNames.sort();
-  return [...new Set(monNames)]; // removes duplicates
+  return true;
+}
+
+export default async function getMonNames() {
+  try {
+    const monNames: Array<string> = [];
+    const monCollection: Array<PokemonCollectionData> = await getMonCollection() as Array<PokemonCollectionData>;
+  
+    monCollection.forEach((mon) => {
+      const splitName: Array<string> = mon.name.split('-');
+      let name = splitName[0][0].toUpperCase() + splitName[0].substr(1);
+
+      if (splitName.length > 1) {
+        if (!shouldFilterName(splitName)) {
+          for (let i = 1; i < splitName.length; i++) {
+            name += '-' + splitName[i][0].toUpperCase() + splitName[i].substr(1);
+          }
+        }
+      }
+      monNames.push(name);
+    });
+
+    monNames.sort();
+    return [...new Set(monNames)]; // removes duplicates
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
 }

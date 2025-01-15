@@ -15,17 +15,17 @@ export default function Header() {
           <ul className="flex gap-[15px] justify-end items-center">
             <li title="Home" className="h-[30px]">
               <Link href="/">
-                <FontAwesomeIcon icon={faHouseChimney} className="h-[30px]"/>
+                <FontAwesomeIcon icon={faHouseChimney} className="h-[30px] hover:text-purple-300 active:text-purple-500 transition"/>
               </Link>
             </li>
             <li title="Daily" className="h-[30px]">
               <Link href="/daily">
-                <FontAwesomeIcon icon={faClock} className="h-[30px]"/>
+                <FontAwesomeIcon icon={faClock} className="h-[30px] hover:text-purple-300 active:text-purple-500 transition"/>
               </Link>
             </li>
             <li title="Archive" className="h-[30px]">
               <Link href="/archive">
-                <FontAwesomeIcon icon={faCalendarDays} className="h-[30px]"/>
+                <FontAwesomeIcon icon={faCalendarDays} className="h-[30px] hover:text-purple-300 active:text-purple-500 transition"/>
               </Link>
             </li>
           </ul>

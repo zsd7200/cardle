@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
@@ -12,7 +12,6 @@ import {
 from 'date-fns';
 
 export default function Calendar() {
-  const router = useRouter();
   const currDate = startOfToday();
   let [currentMonth, setCurrentMonth] = useState(format(currDate, 'MMM-yyyy'));
   let firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date());
@@ -33,10 +32,6 @@ export default function Calendar() {
   ];
 
   const minYear = 2025;
-
-  let clickHandler = (date: string) => {
-    router.push(`/archive/${date}`);
-  }
 
   let classNames = (...classes: Array<any>) => {
     return classes.filter(Boolean).join(' ');
@@ -92,29 +87,28 @@ export default function Calendar() {
                 key={day.toString()}
                 className="py-1.5"
               >
-                <button
-                  type="button"
-                  onClick={e => {
-                    if (day <= new Date() && day.getFullYear() >= minYear) {
-                      clickHandler(format(day, 'yyyy-MM-dd'));
-                    }
-                  }}
+                <Link
+                  href={
+                    (day <= new Date() && day.getFullYear() >= minYear) 
+                    ? `/archive/${format(day, 'yyyy-MM-dd')}` 
+                    : '#'
+                  }
                   className={classNames(
                     !isToday(day) && isSameMonth(day, firstDayCurrentMonth) && (day < new Date()) &&
-                      'text-gray-100 hover:bg-purple-300 hover:text-gray-800',
+                      'text-gray-100 hover:bg-purple-300 active:bg-purple-500 hover:text-gray-800',
                     !isToday(day) && isSameMonth(day, firstDayCurrentMonth) && (day > new Date()) &&
                       'text-gray-400 hover:cursor-default',
                     !isToday(day) && !isSameMonth(day, firstDayCurrentMonth) &&
                       'text-gray-600 hover:cursor-default',
                     isToday(day) && 
-                      'text-gray-100 bg-purple-800 font-semibold',
+                      'text-gray-100 bg-purple-600 active:bg-purple-800 font-semibold',
                     'mx-auto flex h-20 w-20 items-center justify-center rounded-full transition'
                   )}
                 >
                   <time dateTime={format(day, 'yyyy-MM-dd')}>
                     {format(day, 'd')}
                   </time>
-                </button>
+                </Link>
               </div>
             ))}
           </div>

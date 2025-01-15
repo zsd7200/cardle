@@ -1,4 +1,4 @@
-import { Card } from "@/components/tcg/card";
+import Card from "@/components/tcg/card";
 
 export default function Home() {
   return (

@@ -1,6 +1,6 @@
 import dbConnect from "@/components/db/connect";
-import COTD from "@/models/COTD";
-import { getRandomCard } from "@/components/tcg/card";
+import COTD from '@/models/cotd'
+import { getRandomCard } from "@/components/util/tcg/card";
 import { format } from 'date-fns';
 
 async function populate(date: string | undefined = undefined) {
