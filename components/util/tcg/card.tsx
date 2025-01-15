@@ -67,6 +67,15 @@ type CardProps = {
   data?: InnerCardData
 }
 
+const getApiUrl = () => {
+  const url =
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:3000/api/names"
+      : "https://www.cardle.wtf/api/names";
+
+  return url;
+}
+
 export async function getCardById(cardId: string) {
   const url: string = `https://api.pokemontcg.io/v2/cards/${cardId}`;
   const result: CardProps = await fetchData(url);
@@ -81,7 +90,7 @@ export async function getRandomCard(set: SetData | undefined = undefined) {
 }
 
 export async function getMonNamesFromApi() {
-  const url: string = `/api/names`;
+  const url: string = getApiUrl();
   const result = await fetchData(url);
   return result;
 }
