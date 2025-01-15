@@ -24,7 +24,7 @@ export default function Card(props: CardProps | undefined = undefined) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    let loadCardData = async () => {
+    const loadCardData = async () => {
       if (props?.data) {
         setCardData(props.data);
         return;
@@ -44,7 +44,7 @@ export default function Card(props: CardProps | undefined = undefined) {
   }, []);
 
   // handle any differences between the apis
-  let formatName = (name: string) => {
+  const formatName = (name: string) => {
     name = name.trim();
 
     if (name.includes("'s ")) {
@@ -76,7 +76,8 @@ export default function Card(props: CardProps | undefined = undefined) {
     return name;
   }
 
-  let handleSubmit = (e: any) => {
+  // eslint-disable-next-line no-explicit-any
+  const handleSubmit = (e: any) => {
     e.preventDefault();
     if (e.target.mon.value.length <= 1) return;
 
@@ -100,22 +101,22 @@ export default function Card(props: CardProps | undefined = undefined) {
     return handleWin();
   };
 
-  let handleWin = () => {
+  const handleWin = () => {
     setTimeout(() => { setConfettiPieces(0); }, 5000);
     setWinState(true);
     setIsModalOpen(true);
   }
 
-  let handleLoss = () => {
+  const handleLoss = () => {
     setLoseState(true);
     setIsModalOpen(true);
   }
 
-  let closeModal = () => {
+  const closeModal = () => {
     setIsModalOpen(false);
   }
 
-  let cardClasses = () => {
+  const cardClasses = () => {
     let base = 'h-[700px] pointer-events-none ';
     if (winState) return base;
 
@@ -136,7 +137,7 @@ export default function Card(props: CardProps | undefined = undefined) {
     return base;
   }
 
-  let shareHandler = () => {
+  const shareHandler = () => {
     navigator.clipboard.writeText('Cardle: https://cardle.wtf/');
   }
 
@@ -145,7 +146,7 @@ export default function Card(props: CardProps | undefined = undefined) {
       <div className="flex flex-col lg:flex-row justify-center items-center gap-[50px]">
         <div className="overflow-hidden">
           <div className="overflow-hidden max-h-[700px] w-fit ">
-            <img src={cardData.images.large ?? cardData.images.small} className={cardClasses()} />
+            <img src={cardData.images.large ?? cardData.images.small} className={cardClasses()} alt="Pokémon Card"/>
           </div>
         </div>
         <div className="flex flex-col w-5/6 lg:w-1/2 xl:w-1/3 text-lg rounded-lg px-[15px] py-[10px] shadow-[0px_0px_13px_8px_rgba(128,_128,_128,_0.1)] bg-gray-700">
@@ -200,10 +201,10 @@ export default function Card(props: CardProps | undefined = undefined) {
             </form>
             <div>
               <ul className="flex gap-[10px]">
-                {[...Array(guessesRemaining)].map((_: any, i: number) => (
+                {[...Array(guessesRemaining)].map((_: string, i: number) => (
                   <li key={`remain-guess-${i}`} className="text-purple-300"><FontAwesomeIcon icon={faCircle} /></li>
                 ))}
-                {[...Array(guessesUsed)].map((_: any, i: number) => (
+                {[...Array(guessesUsed)].map((_: string, i: number) => (
                   <li key={`used-guess-${i}`} className="text-red-400"><FontAwesomeIcon icon={faCircleXmark} /></li>
                 ))}
               </ul>

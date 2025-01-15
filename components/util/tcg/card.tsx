@@ -63,14 +63,6 @@ export const dummyCard: InnerCardData = {
   },
 }
 
-type CardsData = {
-  data: Array<InnerCardData>,
-  page: number,
-  pageSize: number,
-  count: number,
-  totalCount: number,
-}
-
 type CardProps = {
   data?: InnerCardData
 }

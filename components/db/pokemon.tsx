@@ -28,7 +28,7 @@ async function getCount() {
   return data.count;
 }
 
-async function populate(date: Date | undefined = undefined) {
+async function populate() {
   await dbConnect();
   try {
     const url: string = `https://pokeapi.co/api/v2/pokemon/?limit=5000`;
@@ -81,7 +81,7 @@ async function getMonCollection() {
   }
 }
 
-let shouldFilterName = (nameArr: Array<string>) => {
+const shouldFilterName = (nameArr: Array<string>) => {
   if (nameArr.length == 2) {
     if (
       // regional forms

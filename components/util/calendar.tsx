@@ -5,18 +5,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import { 
-  startOfToday, eachDayOfInterval, startOfWeek, 
-  startOfMonth, endOfWeek, endOfMonth, 
-  isToday, isEqual, isSameMonth, 
-  getDay, format, parse, add } 
+  startOfToday, eachDayOfInterval, 
+  startOfWeek, endOfWeek, 
+  endOfMonth, isToday, isSameMonth, 
+  format, parse, add }
 from 'date-fns';
 
 export default function Calendar() {
   const currDate = startOfToday();
-  let [currentMonth, setCurrentMonth] = useState(format(currDate, 'MMM-yyyy'));
-  let firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date());
+  const [currentMonth, setCurrentMonth] = useState(format(currDate, 'MMM-yyyy'));
+  const firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date());
   
-  let days = eachDayOfInterval({ 
+  const days = eachDayOfInterval({ 
     start: startOfWeek(firstDayCurrentMonth), 
     end: endOfWeek(endOfMonth(firstDayCurrentMonth)) 
   });
@@ -33,18 +33,18 @@ export default function Calendar() {
 
   const minYear = 2025;
 
-  let classNames = (...classes: Array<any>) => {
+  const classNames = (...classes: Array<any>) => {
     return classes.filter(Boolean).join(' ');
   }
 
-  let previousMonth = () => {
-    let firstDayPrevMonth = add(firstDayCurrentMonth, { months: -1 });
+  const previousMonth = () => {
+    const firstDayPrevMonth = add(firstDayCurrentMonth, { months: -1 });
     if (firstDayPrevMonth.getFullYear() < minYear) return;
     setCurrentMonth(format(firstDayPrevMonth, 'MMM-yyyy'));
   }
 
-  let nextMonth = () => {
-    let firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 });
+  const nextMonth = () => {
+    const firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 });
     setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'));
   }
 

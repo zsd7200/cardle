@@ -28,7 +28,7 @@ async function getCount() {
   return data.count;
 }
 
-async function populate(date: Date | undefined = undefined) {
+async function populate() {
   await dbConnect();
   try {
     const url: string = `https://api.pokemontcg.io/v2/sets/`;
