@@ -33,6 +33,7 @@ export default function Calendar() {
 
   const minYear = 2025;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const classNames = (...classes: Array<any>) => {
     return classes.filter(Boolean).join(' ');
   }

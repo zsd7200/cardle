@@ -34,7 +34,7 @@ export default function Card(props: CardProps | undefined = undefined) {
       setCardData(randomCardData);
     }
 
-    let loadMonNames = async () => {
+    const loadMonNames = async () => {
       const monNamesData = await getMonNamesFromApi();
       setMonNames(monNamesData);
     }
@@ -76,7 +76,7 @@ export default function Card(props: CardProps | undefined = undefined) {
     return name;
   }
 
-  // eslint-disable-next-line no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSubmit = (e: any) => {
     e.preventDefault();
     if (e.target.mon.value.length <= 1) return;
