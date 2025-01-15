@@ -5,6 +5,7 @@ import { getRandomCard, getMonNamesFromApi, InnerCardData, dummyCard } from '@/c
 import { compareTwoStrings } from 'string-similarity';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import Confetti from 'react-confetti';
 
 type CardProps = {
   data?: InnerCardData
@@ -17,6 +18,7 @@ export default function Card(props: CardProps | undefined = undefined) {
   const [guessesUsed, setGuessesUsed] = useState<number>(0);
   const [winState, setWinState] = useState<Boolean>(false);
   const [loseState, setLoseState] = useState<Boolean>(false);
+  const [confettiPieces, setConfettiPieces] = useState<number>(200);
 
   useEffect(() => {
     let loadCardData = async () => {
@@ -94,12 +96,11 @@ export default function Card(props: CardProps | undefined = undefined) {
 
   let handleWin = () => {
     setWinState(true);
-    alert('win');
+    setTimeout(() => { setConfettiPieces(0); }, 5000);
   }
 
   let handleLoss = () => {
     setLoseState(true);
-    alert('lose');
   }
 
   let cardClasses = () => {
@@ -189,6 +190,7 @@ export default function Card(props: CardProps | undefined = undefined) {
           </div>
         </div>
       </div>
+      {winState && <Confetti numberOfPieces={confettiPieces} />}
     </>
   );
 }
