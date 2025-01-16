@@ -187,7 +187,7 @@ export default function Card(props: CardProps | undefined = undefined) {
         copyToClipboard(
 `${messageStr} - ${date}
 ${getGuessStr()}
-https://cardle.wtf/`
+https://cardle.wtf/daily`
         );
         break;
       // homepage
@@ -208,7 +208,7 @@ https://cardle.wtf/`
         copyToClipboard(
 `${archiveMessageStr}
 ${getGuessStr()}
-https://cardle.wtf/`
+https://cardle.wtf/archive/${archiveDate}`
         );
         break;
     }
