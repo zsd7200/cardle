@@ -229,7 +229,7 @@ https://cardle.wtf/`
         <Link 
           href={(getModeByPath() == 'daily' || getModeByPath() == 'other') ? '/' : '/archive'}
           onClick={revalidateHome}
-          className="bg-purple-400 hover:bg-purple-600 active:bg-purple-800 text-white font-bold py-1 px-2 rounded transition w-2/5 text-center" 
+          className="bg-purple-400 hover:bg-purple-600 active:bg-purple-800 text-white font-bold py-1 px-2 rounded transition w-[40%] text-center" 
         >
           {getModeByPath() == 'daily' &&
             <span className="text-lg">Play Random</span>
@@ -244,7 +244,7 @@ https://cardle.wtf/`
         <button 
           type="button"
           onClick={shareHandler} 
-          className="bg-purple-400 hover:bg-purple-600 active:bg-purple-800 text-white font-bold py-1 px-3 rounded transition w-2/5 text-center" 
+          className="bg-purple-400 hover:bg-purple-600 active:bg-purple-800 text-white font-bold py-1 px-2 rounded transition w-[40%] text-center" 
         >
           Share
         </button>
@@ -381,13 +381,13 @@ https://cardle.wtf/`
           <>
             <h2 className="font-bold text-2xl text-center">Congratulations! 🎉</h2>
             {getModeByPath() == 'daily' &&
-              <span className="text-lg">Come back tomorrow for a new Daily Challenge!</span>
+              <span className="text-lg text-center">Come back tomorrow for a new Daily Challenge!</span>
             }
             {getModeByPath() == 'archive' &&
-              <span className="text-lg">Try another archived challenge!</span>
+              <span className="text-lg text-center">Try another archived challenge!</span>
             }
             {getModeByPath() == 'other' &&
-              <span className="text-lg">Try another one!</span>
+              <span className="text-lg text-center">Try another one!</span>
             }
           </>
           }
