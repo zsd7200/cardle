@@ -1,4 +1,4 @@
-# Cardle
+# [Cardle](https://www.cardle.wtf/)
 
 A Pokémon TCG daily game. WIP.
 

@@ -4,13 +4,14 @@ export type SetData = {
   set_id: string,
   name: string,
   total: number,
+  printedTotal: number,
 }
 
 const getApiUrl = () => {
   const url =
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:3000/api/sets"
-      : "https://www.cardle.wtf/api/sets";
+    process.env.NODE_ENV === 'development'
+      ? 'http://localhost:3000/api/sets'
+      : 'https://www.cardle.wtf/api/sets';
 
   return url;
 }

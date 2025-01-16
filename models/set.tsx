@@ -4,6 +4,7 @@ export interface SetInterface extends mongoose.Document {
   set_id: string,
   name: string,
   total: number,
+  printedTotal: number,
   created?: Date,
   updated?: Date,
 };
@@ -18,6 +19,10 @@ const SetSchema = new mongoose.Schema<SetInterface>({
     required: true,
   },
   total: {
+    type: Number,
+    required: true,
+  },
+  printedTotal: {
     type: Number,
     required: true,
   },

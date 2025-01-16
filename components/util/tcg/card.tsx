@@ -69,9 +69,9 @@ type CardProps = {
 
 const getApiUrl = () => {
   const url =
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:3000/api/names"
-      : "https://www.cardle.wtf/api/names";
+    process.env.NODE_ENV === 'development'
+      ? 'http://localhost:3000/api/names'
+      : 'https://www.cardle.wtf/api/names';
 
   return url;
 }
@@ -84,8 +84,17 @@ export async function getCardById(cardId: string) {
 
 export async function getRandomCard(set: SetData | undefined = undefined) {
   set = set ?? await getRandomSet();
-  const cardId = `${set.set_id}-${Math.floor(Math.random() * set.total)}`
-  const randomCard: CardProps = await getCardById(cardId);
+  let randomCard: CardProps;
+  let cardId = `${set.set_id}-${Math.floor(Math.random() * set.total - 1) + 1}`
+
+  // reroll on safer number if above cardId returns a 404
+  try {
+    randomCard = await getCardById(cardId);
+  } catch {
+    cardId = `${set.set_id}-${Math.floor(Math.random() * set.printedTotal - 1) + 1}`
+    randomCard = await getCardById(cardId);
+  }
+
   return randomCard?.data ?? dummyCard;
 }
 

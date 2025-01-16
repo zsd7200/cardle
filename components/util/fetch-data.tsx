@@ -9,7 +9,7 @@ export default async function fetchData(url: string, key: string | undefined = u
   });
 
   if (!res.ok) {
-    return [];
+    throw new Error(`${res.status} returned from ${url}`);
   }
 
   return await res.json();

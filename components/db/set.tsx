@@ -8,6 +8,7 @@ type SetCollectionData = {
   set_id: string,
   name: string,
   total: number,
+  printedTotal: number,
   created?: Date,
   updated?: Date,
 }
@@ -16,6 +17,7 @@ type InnerPokemonTcgApiData = {
   id: string,
   name: string,
   total: number,
+  printedTotal: number,
 }
 
 type PokemonTcgApiData = {
@@ -40,6 +42,7 @@ async function populate() {
         set_id: set.id,
         name: set.name,
         total: set.total,
+        printedTotal: set.printedTotal
       };
       console.log(modelData);
       await Set.create(modelData);

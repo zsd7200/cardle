@@ -7,6 +7,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { useWindowSize, useCopyToClipboard } from 'react-use';
 import { revalidatePath } from 'next/cache';
+import { useTheme } from 'next-themes';
+import { usePathname } from 'next/navigation';
+import { format } from 'date-fns';
 import Confetti from 'react-confetti';
 import Modal from 'react-modal';
 import Link from 'next/link';
@@ -16,9 +19,11 @@ type CardProps = {
 }
 
 export default function Card(props: CardProps | undefined = undefined) {
+  const allowedGuesses = 3;
+  const [mounted, setMounted] = useState<boolean>(false);
   const [cardData, setCardData] = useState<InnerCardData>(dummyCard);
   const [monNames, setMonNames] = useState<Array<string>>(['Pokémon']);
-  const [guessesRemaining, setGuessesRemaining] = useState<number>(3);
+  const [guessesRemaining, setGuessesRemaining] = useState<number>(allowedGuesses);
   const [guessesUsed, setGuessesUsed] = useState<number>(0);
   const [winState, setWinState] = useState<boolean>(false);
   const [loseState, setLoseState] = useState<boolean>(false);
@@ -26,6 +31,8 @@ export default function Card(props: CardProps | undefined = undefined) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [clipboardState, copyToClipboard] = useCopyToClipboard();
   const { width, height } = useWindowSize();
+  const { resolvedTheme } = useTheme();
+  const pathname = usePathname();
 
   useEffect(() => {
     const loadCardData = async () => {
@@ -45,7 +52,12 @@ export default function Card(props: CardProps | undefined = undefined) {
 
     loadCardData();
     loadMonNames();
+    setMounted(true);
   }, []);
+
+  if (!mounted) {
+    return null;
+  }
 
   // handle any differences between the apis
   const formatName = (name: string) => {
@@ -146,7 +158,60 @@ export default function Card(props: CardProps | undefined = undefined) {
   }
 
   const shareHandler = () => {
-    copyToClipboard('Cardle: https://cardle.wtf/');
+    const getGuessStr = () => {
+      let guessesStr = '';
+      if (guessesRemaining !== 0) {
+        for (let i = 0; i < guessesRemaining; i++) {
+          guessesStr += '🟢';
+        }
+      }
+      if (guessesUsed !== 0) {
+        for (let i = 0; i < guessesUsed; i++) {
+          guessesStr += '⚫';
+        }
+      }
+
+      return guessesStr;
+    }
+
+    switch (pathname) {
+      // daily
+      case '/daily':
+        const date = format(new Date(), 'yyyy-MM-dd');
+        let messageStr = `Today's Cardle`;
+        
+        if (winState) {
+          messageStr = `I won today's Cardle!`;
+        }
+
+        copyToClipboard(
+`${messageStr} - ${date}
+${getGuessStr()}
+https://cardle.wtf/`
+        );
+        break;
+      // homepage
+      case '/':
+        copyToClipboard(
+`I'm having fun on Cardle!
+https://cardle.wtf/`
+        );
+        break;
+      // archive
+      default:
+        if (!pathname.includes('archive')) return;
+        const archiveDate = pathname.split('archive/')[1];
+        let archiveMessageStr = `Cardle from ${archiveDate}`;
+        if (winState) {
+          archiveMessageStr = `I won Cardle from ${archiveDate}!`;
+        }
+        copyToClipboard(
+`${archiveMessageStr}
+${getGuessStr()}
+https://cardle.wtf/`
+        );
+        break;
+    }
   }
 
   return (
@@ -157,7 +222,13 @@ export default function Card(props: CardProps | undefined = undefined) {
             <img src={cardData.images.large ?? cardData.images.small} className={cardClasses()} alt="Pokémon Card" />
           </div>
         </div>
-        <div className="flex flex-col w-5/6 lg:w-1/2 xl:w-1/3 text-lg rounded-lg px-[15px] py-[10px] shadow-[0px_0px_13px_8px_rgba(128,_128,_128,_0.1)] bg-gray-700">
+        <div className="
+          flex flex-col w-5/6 lg:w-1/2 xl:w-1/3 
+          text-lg rounded-lg px-[15px] py-[10px]
+          dark:shadow-[0px_0px_13px_8px_rgba(128,_128,_128,_0.1)] 
+          bg-gray-100 dark:bg-gray-800
+          text-gray-600 dark:text-gray-100
+        ">
           <div className="flex flex-col pb-[15px]">
             <div className="flex justify-between">
               <span>Classification:</span>
@@ -187,7 +258,9 @@ export default function Card(props: CardProps | undefined = undefined) {
                 name="mon"
                 placeholder={ monNames[Math.floor(Math.random() * monNames.length)] }
                 className="
-                  text-black px-2 py-1 border rounded-md 
+                  bg-white dark:bg-white
+                  text-black dark:text-black
+                  px-2 py-1 border rounded-md 
                   shadow-sm outline-none focus:ring-2 
                   focus:ring-purple-300 transition
                   arrow:!block
@@ -222,8 +295,29 @@ export default function Card(props: CardProps | undefined = undefined) {
             (winState || loseState) &&
             <>
               <hr className="h-px mt-5 mb-3 bg-purple-200 border-0 dark:bg-purple-400" />
-              <div className="flex justify-center align-center">
-                <span>The answer was <b>{cardData.name}</b>!</span>
+              <div className="flex flex-col justify-center items-center">
+                <span className="mb-5">The answer was <b>{cardData.name}</b>!</span>
+                <div className="flex justify-around w-5/6 lg:w-3/4">
+                  <Link 
+                    href="/"
+                    onClick={revalidateHome}
+                    className="bg-purple-400 hover:bg-purple-600 active:bg-purple-800 text-white font-bold py-1 px-3 rounded transition w-2/5 text-center" 
+                  >
+                    Go Home
+                  </Link>
+                  <button 
+                    type="button"
+                    onClick={shareHandler} 
+                    className="bg-purple-400 hover:bg-purple-600 active:bg-purple-800 text-white font-bold py-1 px-3 rounded transition w-2/5 text-center" 
+                  >
+                    Share
+                  </button>
+                  {clipboardState.error &&
+                    <>
+                      <span>⚠️ Error copying Share information to clipboard.</span>
+                    </>
+                  }
+                </div>
               </div>
             </>
           }
@@ -239,6 +333,7 @@ export default function Card(props: CardProps | undefined = undefined) {
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
+        ariaHideApp={false}
         style={{
           overlay: {
             background: 'rgba(0, 0, 0, 0.5)',
@@ -250,18 +345,19 @@ export default function Card(props: CardProps | undefined = undefined) {
             bottom: 'auto',
             marginRight: '-50%',
             transform: 'translate(-50%, -50%)',
-            background: 'rgb(55 65 81)',
+            background: (resolvedTheme === 'light') ? 'rgb(229 231 235)' : 'rgb(55 65 81)',
             border: 'none',
             boxShadow: '0px 0px 13px 8px rgba(128,128,128,0.3)'
           },
         }}
       >
-        <>
+        <div className="text-gray-600 dark:text-gray-100">
           {winState && 
           <>
             <h2 className="font-bold text-2xl text-center">Congratulations! 🎉</h2>
             <span className="text-lg">Come back tomorrow for a new Daily Challenge!</span>
-          </>}
+          </>
+          }
           {loseState && 
           <>
             <h2 className="font-bold text-2xl text-center">😔 Better luck next time!</h2>
@@ -289,7 +385,7 @@ export default function Card(props: CardProps | undefined = undefined) {
               </>
             }
           </div>
-        </>
+        </div>
       </Modal>
     </>
   );
