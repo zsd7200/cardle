@@ -82,16 +82,133 @@ export async function getCardById(cardId: string) {
   return result;
 }
 
+// handle weird sets that have prefixes
+const getCardId = (id: string, count: number) => {
+  let rand = Math.floor(Math.random() * count - 1) + 1;
+  let prefix = '';
+
+  switch (id) {
+    case 'dpp':
+      prefix += (rand < 10) ? 'DP0' : 'DP';
+      break;
+    case 'hsp':
+      prefix += (rand < 10) ? 'HGSS0' : 'HGSS';
+      break;
+    case 'bwp':
+      prefix += (rand < 10) ? 'BW0' : 'BW';
+      break;
+    case 'xyp':
+      prefix += (rand < 10) ? 'XY0' : 'XY';
+      break;
+    case 'smp':
+      prefix += (rand < 10) ? 'SM0' : 'SM';
+      break;
+    case 'sma':
+      prefix += 'SV';
+      break;
+    case 'swshp':
+      prefix += (rand < 10) 
+        ? 'SWSH00' 
+        : (rand < 100)
+          ? 'SWSH0'
+          : 'SWSH';
+      break;
+    case 'swsh45sv':
+      prefix += (rand < 10) 
+        ? 'SV00' 
+        : (rand < 100)
+          ? 'SV0'
+          : 'SV';
+      break;
+    case 'swsh9tg':
+    case 'swsh10tg':
+    case 'swsh11tg':
+    case 'swsh12tg':
+      prefix += (rand < 10) ? 'TG0' : 'TG';
+      break;
+    case 'swsh12pt5gg':
+      prefix += (rand < 10) ? 'GG0' : 'GG';
+      break;
+    case 'ecard2':
+    case 'ecard3':
+      // these sets have 32 holo cards that don't count toward 
+      // the count because they're prefixed with H
+      const holoCount = 32;
+      rand = Math.floor(Math.random() * (count - holoCount) - 1) + 1;
+      if (rand < holoCount && Math.random() > 0.5) {
+        prefix += 'H';
+      }
+      break;
+    case 'col1':
+      if (rand >= 96) {
+        rand -= 95
+        prefix += 'SL';
+      }
+      break;
+    case 'dp7':
+      if (rand >= 104) {
+        rand -= 103
+        prefix += 'SH';
+      }
+      break;
+    case 'pl1':
+      if (rand >= 131) {
+        rand -= 130
+        prefix += 'SH';
+      }
+      break;
+    case 'pl2':
+      if (rand >= 115) {
+        rand -= 114
+        prefix += 'RT';
+      }
+      break;
+    case 'pl3':
+      if (rand >= 150) {
+        rand -= 149;
+        prefix += 'SH';
+      }
+      break;
+    case 'pl4':
+      if (rand >= 100) {
+        rand -= 99;
+        prefix += 'AR';
+      }
+      break;
+    case 'bw11':
+      if (rand >= 116) {
+        rand -= 115;
+        prefix += 'RC';
+      }
+      break;
+    case 'g1':
+      if (rand >= 84) {
+        rand -= 83;
+        prefix += 'RC';
+      }
+      break;
+    default:
+      break;
+  }
+
+  return prefix + rand;
+}
+
 export async function getRandomCard(set: SetData | undefined = undefined) {
-  set = set ?? await getRandomSet();
+  // roll a random set if set isn't passed in
+  // or if it's a crazy set that can't just
+  // have a random number tacked onto it
+  while (!set || set.set_id == 'cel25c' || set.set_id == 'sve') {
+    set = await getRandomSet();
+  }
   let randomCard: CardProps;
-  let cardId = `${set.set_id}-${Math.floor(Math.random() * set.total - 1) + 1}`
+  let cardId = `${set.set_id}-${getCardId(set.set_id, set.total)}`;
 
   // reroll on safer number if above cardId returns a 404
   try {
     randomCard = await getCardById(cardId);
   } catch {
-    cardId = `${set.set_id}-${Math.floor(Math.random() * set.printedTotal - 1) + 1}`
+    cardId = `${set.set_id}-${getCardId(set.set_id, set.printedTotal)}`;
     randomCard = await getCardById(cardId);
   }
 
