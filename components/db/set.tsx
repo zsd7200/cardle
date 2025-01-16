@@ -1,9 +1,10 @@
 import dbConnect from "@/components/db/connect";
 import Set from "@/models/set";
 import fetchData from "@/components/util/fetch-data";
+import { Types } from 'mongoose';
 
 type SetCollectionData = {
-  id: number,
+  _id: Types.ObjectId,
   set_id: string,
   name: string,
   total: number,
@@ -65,7 +66,7 @@ export default async function getSetCollection() {
       }
 
       // update lastMon to have new last checked date
-      Set.findOneAndUpdate({ id: lastSet.id }, { updated: new Date().toISOString() });
+      Set.findOneAndUpdate({ _id: lastSet._id }, { updated: new Date().toISOString() });
     }
 
     // only poll pokeapi if 30 days has passed and if count has changed

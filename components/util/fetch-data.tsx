@@ -4,7 +4,7 @@ export default async function fetchData(url: string, key: string | undefined = u
   };
   const res = await fetch(url, {
     method: 'GET',
-    headers: headers,
+    headers: (key) ? headers : undefined,
     cache: 'force-cache',
   });
 

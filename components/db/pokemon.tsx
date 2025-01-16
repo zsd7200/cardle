@@ -1,9 +1,10 @@
 import dbConnect from "@/components/db/connect";
 import Pokemon from "@/models/pokemon";
 import fetchData from "@/components/util/fetch-data";
+import { Types } from 'mongoose';
 
 type PokemonCollectionData = {
-  id: number,
+  _id: Types.ObjectId,
   name: string,
   api_url: string,
   created?: Date,
@@ -64,7 +65,7 @@ async function getMonCollection() {
       }
 
       // update lastMon to have new last checked date
-      Pokemon.findOneAndUpdate({ id: lastMon.id }, { updated: new Date().toISOString() });
+      Pokemon.findOneAndUpdate({ _id: lastMon._id }, { updated: new Date().toISOString() });
     }
 
     // only poll pokeapi if 30 days has passed and if count has changed

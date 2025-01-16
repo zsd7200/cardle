@@ -5,6 +5,8 @@ import { getRandomCard, getMonNamesFromApi, InnerCardData, dummyCard } from '@/c
 import { compareTwoStrings } from 'string-similarity';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import { useWindowSize, useCopyToClipboard } from 'react-use';
+import { revalidatePath } from 'next/cache';
 import Confetti from 'react-confetti';
 import Modal from 'react-modal';
 import Link from 'next/link';
@@ -22,6 +24,8 @@ export default function Card(props: CardProps | undefined = undefined) {
   const [loseState, setLoseState] = useState<boolean>(false);
   const [confettiPieces, setConfettiPieces] = useState<number>(200);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [clipboardState, copyToClipboard] = useCopyToClipboard();
+  const { width, height } = useWindowSize();
 
   useEffect(() => {
     const loadCardData = async () => {
@@ -117,7 +121,7 @@ export default function Card(props: CardProps | undefined = undefined) {
   }
 
   const cardClasses = () => {
-    let base = 'h-[700px] pointer-events-none ';
+    let base = 'w-full h-auto lg:w-auto lg:h-[700px] pointer-events-none ';
     if (winState) return base;
 
     switch (guessesRemaining) {
@@ -137,16 +141,20 @@ export default function Card(props: CardProps | undefined = undefined) {
     return base;
   }
 
+  const revalidateHome = () => {
+    revalidatePath('/');
+  }
+
   const shareHandler = () => {
-    navigator.clipboard.writeText('Cardle: https://cardle.wtf/');
+    copyToClipboard('Cardle: https://cardle.wtf/');
   }
 
   return (
     <>
       <div className="flex flex-col lg:flex-row justify-center items-center gap-[50px]">
-        <div className="overflow-hidden">
-          <div className="overflow-hidden max-h-[700px] w-fit ">
-            <img src={cardData.images.large ?? cardData.images.small} className={cardClasses()} alt="Pokémon Card"/>
+        <div className="flex justify-center items-center overflow-hidden">
+          <div className="overflow-hidden max-h-[700px] w-2/3 lg:w-fit ">
+            <img src={cardData.images.large ?? cardData.images.small} className={cardClasses()} alt="Pokémon Card" />
           </div>
         </div>
         <div className="flex flex-col w-5/6 lg:w-1/2 xl:w-1/3 text-lg rounded-lg px-[15px] py-[10px] shadow-[0px_0px_13px_8px_rgba(128,_128,_128,_0.1)] bg-gray-700">
@@ -172,7 +180,7 @@ export default function Card(props: CardProps | undefined = undefined) {
               <span>{cardData.rarity ?? 'Unknown Rarity'}</span>
             </div>
           </div>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center flex-col gap-[10px] md:flex-row md:gap-[0px]">
             <form onSubmit={handleSubmit} className="flex items-center gap-[5px]">
               <input 
                 list="mon"
@@ -221,7 +229,13 @@ export default function Card(props: CardProps | undefined = undefined) {
           }
         </div>
       </div>
-      {winState && <Confetti numberOfPieces={confettiPieces} />}
+      {winState && 
+        <Confetti 
+          numberOfPieces={confettiPieces}
+          width={width}
+          height={height}
+        />
+      }
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
@@ -257,6 +271,7 @@ export default function Card(props: CardProps | undefined = undefined) {
           <div className="flex justify-around">
             <Link 
               href="/"
+              onClick={revalidateHome}
               className="bg-purple-400 hover:bg-purple-600 active:bg-purple-800 text-white font-bold py-1 px-3 rounded transition w-2/5 text-center" 
             >
               Go Home
@@ -268,6 +283,11 @@ export default function Card(props: CardProps | undefined = undefined) {
             >
               Share
             </button>
+            {clipboardState.error &&
+              <>
+                <span>⚠️ Error copying Share information to clipboard.</span>
+              </>
+            }
           </div>
         </>
       </Modal>

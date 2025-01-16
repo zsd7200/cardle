@@ -3,8 +3,13 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouseChimney, faClock, faCalendarDays } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
+import { revalidatePath } from 'next/cache';
 
 export default function Header() {
+  const revalidateHome = () => {
+    revalidatePath('/');
+  }
+
   return (
     <>
       <header className="flex w-full justify-between px-[30px] my-[13px]">
@@ -14,7 +19,7 @@ export default function Header() {
         <nav className="flex">
           <ul className="flex gap-[15px] justify-end items-center">
             <li title="Home" className="h-[30px]">
-              <Link href="/">
+              <Link href="/" onClick={revalidateHome}>
                 <FontAwesomeIcon icon={faHouseChimney} className="h-[30px] hover:text-purple-300 active:text-purple-500 transition"/>
               </Link>
             </li>
