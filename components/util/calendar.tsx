@@ -96,14 +96,14 @@ export default function Calendar() {
                   }
                   className={classNames(
                     !isToday(day) && isSameMonth(day, firstDayCurrentMonth) && (day < new Date()) &&
-                      'dark:text-gray-100 hover:bg-purple-300 active:bg-purple-500 hover:text-gray-800',
+                      'text-gray-900 dark:text-gray-100 hover:bg-purple-300 active:bg-purple-500 hover:text-gray-800',
                     !isToday(day) && isSameMonth(day, firstDayCurrentMonth) && (day > new Date()) &&
                       'text-gray-400 hover:cursor-default',
                     !isToday(day) && !isSameMonth(day, firstDayCurrentMonth) &&
                       'text-gray-300 dark:text-gray-600 hover:cursor-default',
                     isToday(day) && 
                       'text-gray-100 bg-purple-600 active:bg-purple-800 font-semibold',
-                    'mx-auto flex h-10 w-10 md:h-20 md:w-20 items-center justify-center rounded-full transition'
+                    'mx-auto flex h-10 w-10 md:h-20 md:w-20 items-center justify-center rounded-full transition-[background] transition-[background-color]'
                   )}
                 >
                   <time dateTime={format(day, 'yyyy-MM-dd')}>

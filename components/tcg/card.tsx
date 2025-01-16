@@ -229,7 +229,7 @@ https://cardle.wtf/`
         <Link 
           href={(getModeByPath() == 'daily' || getModeByPath() == 'other') ? '/' : '/archive'}
           onClick={revalidateHome}
-          className="bg-purple-400 hover:bg-purple-600 active:bg-purple-800 text-white font-bold py-1 px-2 rounded transition w-[40%] text-center" 
+          className="bg-purple-400 hover:bg-purple-600 active:bg-purple-800 text-white font-bold py-1 px-3 rounded transition w-[35%] text-center" 
         >
           {getModeByPath() == 'daily' &&
             <span className="text-lg">Play Random</span>
@@ -244,7 +244,7 @@ https://cardle.wtf/`
         <button 
           type="button"
           onClick={shareHandler} 
-          className="bg-purple-400 hover:bg-purple-600 active:bg-purple-800 text-white font-bold py-1 px-2 rounded transition w-[40%] text-center" 
+          className="bg-purple-400 hover:bg-purple-600 active:bg-purple-800 text-white font-bold py-1 px-3 rounded transition w-[35%] text-center" 
         >
           Share
         </button>
@@ -372,28 +372,29 @@ https://cardle.wtf/`
             transform: 'translate(-50%, -50%)',
             background: (resolvedTheme === 'light') ? 'rgb(229 231 235)' : 'rgb(55 65 81)',
             border: 'none',
-            boxShadow: '0px 0px 13px 8px rgba(128,128,128,0.3)'
+            boxShadow: '0px 0px 13px 8px rgba(128,128,128,0.3)',
+            minWidth: (width <= 768) ? '80%' : '430px',
           },
         }}
       >
         <div className="text-gray-600 dark:text-gray-100">
           {winState && 
           <>
-            <h2 className="font-bold text-2xl text-center">Congratulations! 🎉</h2>
+            <h2 className="font-bold text-2xl text-center w-full">Congratulations! 🎉</h2>
             {getModeByPath() == 'daily' &&
-              <span className="text-lg text-center">Come back tomorrow for a new Daily Challenge!</span>
+              <p className="text-lg text-center">Come back tomorrow for a new Daily Challenge!</p>
             }
             {getModeByPath() == 'archive' &&
-              <span className="text-lg text-center">Try another archived challenge!</span>
+              <p className="text-lg text-center">Try another archived challenge!</p>
             }
             {getModeByPath() == 'other' &&
-              <span className="text-lg text-center">Try another one!</span>
+              <p className="text-lg text-center">Try another one!</p>
             }
           </>
           }
           {loseState && 
           <>
-            <h2 className="font-bold text-2xl text-center">😔 Better luck next time!</h2>
+            <h2 className="font-bold text-2xl text-center w-full">😔 Better luck next time!</h2>
           </>
           }
           <hr className="h-px mt-5 mb-5 bg-purple-200 border-0 dark:bg-purple-400" />
