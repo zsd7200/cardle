@@ -157,6 +157,15 @@ export default function Card(props: CardProps | undefined = undefined) {
     revalidatePath('/');
   }
 
+  const getModeByPath = () => {
+    if (pathname == '/daily')
+      return 'daily';
+    if (pathname.includes('archive/'))
+      return 'archive';
+
+    return 'other';
+  }
+
   const shareHandler = () => {
     const getGuessStr = () => {
       let guessesStr = '';
@@ -174,9 +183,9 @@ export default function Card(props: CardProps | undefined = undefined) {
       return guessesStr;
     }
 
-    switch (pathname) {
+    switch (getModeByPath()) {
       // daily
-      case '/daily':
+      case 'daily':
         const date = format(new Date(), 'yyyy-MM-dd');
         let messageStr = `Today's Cardle`;
         
@@ -190,15 +199,8 @@ ${getGuessStr()}
 https://cardle.wtf/daily`
         );
         break;
-      // homepage
-      case '/':
-        copyToClipboard(
-`I'm having fun on Cardle!
-https://cardle.wtf/`
-        );
-        break;
       // archive
-      default:
+      case 'archive':
         if (!pathname.includes('archive')) return;
         const archiveDate = pathname.split('archive/')[1];
         let archiveMessageStr = `Cardle from ${archiveDate}`;
@@ -211,7 +213,48 @@ ${getGuessStr()}
 https://cardle.wtf/archive/${archiveDate}`
         );
         break;
+      // homepage
+      default:
+        copyToClipboard(
+`I'm having fun on Cardle!
+https://cardle.wtf/`
+        );
+        break;
     }
+  }
+
+  function Buttons() {
+    return (
+      <>
+        <Link 
+          href={(getModeByPath() == 'daily' || getModeByPath() == 'other') ? '/' : '/archive'}
+          onClick={revalidateHome}
+          className="bg-purple-400 hover:bg-purple-600 active:bg-purple-800 text-white font-bold py-1 px-2 rounded transition w-2/5 text-center" 
+        >
+          {getModeByPath() == 'daily' &&
+            <span className="text-lg">Play Random</span>
+          }
+          {getModeByPath() == 'archive' &&
+            <span className="text-lg">Back to Archive</span>
+          }
+          {getModeByPath() == 'other' &&
+            <span className="text-lg">Play Again</span>
+          }
+        </Link>
+        <button 
+          type="button"
+          onClick={shareHandler} 
+          className="bg-purple-400 hover:bg-purple-600 active:bg-purple-800 text-white font-bold py-1 px-3 rounded transition w-2/5 text-center" 
+        >
+          Share
+        </button>
+        {clipboardState.error &&
+          <>
+            <span>⚠️ Error copying Share information to clipboard.</span>
+          </>
+        }
+      </>
+    )
   }
 
   return (
@@ -298,25 +341,7 @@ https://cardle.wtf/archive/${archiveDate}`
               <div className="flex flex-col justify-center items-center">
                 <span className="mb-5">The answer was <b>{cardData.name}</b>!</span>
                 <div className="flex justify-around w-5/6 lg:w-3/4">
-                  <Link 
-                    href="/"
-                    onClick={revalidateHome}
-                    className="bg-purple-400 hover:bg-purple-600 active:bg-purple-800 text-white font-bold py-1 px-3 rounded transition w-2/5 text-center" 
-                  >
-                    Go Home
-                  </Link>
-                  <button 
-                    type="button"
-                    onClick={shareHandler} 
-                    className="bg-purple-400 hover:bg-purple-600 active:bg-purple-800 text-white font-bold py-1 px-3 rounded transition w-2/5 text-center" 
-                  >
-                    Share
-                  </button>
-                  {clipboardState.error &&
-                    <>
-                      <span>⚠️ Error copying Share information to clipboard.</span>
-                    </>
-                  }
+                  <Buttons />
                 </div>
               </div>
             </>
@@ -355,7 +380,15 @@ https://cardle.wtf/archive/${archiveDate}`
           {winState && 
           <>
             <h2 className="font-bold text-2xl text-center">Congratulations! 🎉</h2>
-            <span className="text-lg">Come back tomorrow for a new Daily Challenge!</span>
+            {getModeByPath() == 'daily' &&
+              <span className="text-lg">Come back tomorrow for a new Daily Challenge!</span>
+            }
+            {getModeByPath() == 'archive' &&
+              <span className="text-lg">Try another archived challenge!</span>
+            }
+            {getModeByPath() == 'other' &&
+              <span className="text-lg">Try another one!</span>
+            }
           </>
           }
           {loseState && 
@@ -365,25 +398,7 @@ https://cardle.wtf/archive/${archiveDate}`
           }
           <hr className="h-px mt-5 mb-5 bg-purple-200 border-0 dark:bg-purple-400" />
           <div className="flex justify-around">
-            <Link 
-              href="/"
-              onClick={revalidateHome}
-              className="bg-purple-400 hover:bg-purple-600 active:bg-purple-800 text-white font-bold py-1 px-3 rounded transition w-2/5 text-center" 
-            >
-              Go Home
-            </Link>
-            <button 
-              type="button"
-              onClick={shareHandler} 
-              className="bg-purple-400 hover:bg-purple-600 active:bg-purple-800 text-white font-bold py-1 px-3 rounded transition w-2/5 text-center" 
-            >
-              Share
-            </button>
-            {clipboardState.error &&
-              <>
-                <span>⚠️ Error copying Share information to clipboard.</span>
-              </>
-            }
+            <Buttons />
           </div>
         </div>
       </Modal>
