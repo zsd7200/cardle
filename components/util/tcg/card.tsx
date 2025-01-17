@@ -54,7 +54,7 @@ export const dummyCard: InnerCardData = {
   rarity: "?????",
   images: {
     small: "https://images.pokemontcg.io/base1/4.png",
-    large: "https://images.pokemontcg.io/base1/4_hires.png"
+    large: "/back.png"
   },
   tcgplayer: {
     url: "?????",

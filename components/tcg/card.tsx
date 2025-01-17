@@ -13,6 +13,7 @@ import { format } from 'date-fns';
 import Confetti from 'react-confetti';
 import Modal from 'react-modal';
 import Link from 'next/link';
+import Image from 'next/image';
 
 type CardProps = {
   data?: InnerCardData
@@ -29,6 +30,7 @@ export default function Card(props: CardProps | undefined = undefined) {
   const [loseState, setLoseState] = useState<boolean>(false);
   const [confettiPieces, setConfettiPieces] = useState<number>(200);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [imgSrc, setImgSrc] = useState<string>(dummyCard.images.large);
   const [clipboardState, copyToClipboard] = useCopyToClipboard();
   const { width, height } = useWindowSize();
   const { resolvedTheme } = useTheme();
@@ -38,11 +40,13 @@ export default function Card(props: CardProps | undefined = undefined) {
     const loadCardData = async () => {
       if (props?.data) {
         setCardData(props.data);
+        setImgSrc(props.data.images.large ?? props.data.images.small);
         return;
       }
   
       const randomCardData = await getRandomCard();
       setCardData(randomCardData);
+      setImgSrc(randomCardData.images.large ?? randomCardData.images.small);
     }
 
     const loadMonNames = async () => {
@@ -262,7 +266,16 @@ https://cardle.wtf/`
       <div className="flex flex-col lg:flex-row justify-center items-center gap-[50px]">
         <div className="flex justify-center items-center overflow-hidden">
           <div className="overflow-hidden max-h-[700px] w-2/3 lg:w-fit ">
-            <img src={cardData.images.large ?? cardData.images.small} className={cardClasses()} alt="Pokémon Card" />
+            <Image 
+                src={imgSrc}
+                onError={() => setImgSrc(cardData.images.small)}
+                alt="Pokémon Card"
+                className={cardClasses()}
+                width={650}
+                height={900}
+                unoptimized={true}
+                priority={true}
+              />
           </div>
         </div>
         <div className="
@@ -280,9 +293,12 @@ https://cardle.wtf/`
             <div className="flex justify-between">
               <span>Subclasses:</span>
               <div>
-                {cardData.subtypes.map((type: string, i: number) => (
-                  <span key={type}>{ (i ? ', ' : '') + type }</span>
-                ))}
+                {(cardData.subtypes)
+                  ? cardData.subtypes?.map((type: string, i: number) => (
+                      <span key={type}>{ (i ? ', ' : '') + type }</span>
+                    ))
+                  : <span>No Subclasses</span>
+                }
               </div>
             </div>
             <div className="flex justify-between">
