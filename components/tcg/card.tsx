@@ -74,7 +74,10 @@ export default function Card(props: CardProps | undefined = undefined) {
     name = name.replace(/ vmax/gi, '');
     name = name.replace(/ v/gi, '');
     name = name.replace(/ ex/gi, '');
+    name = name.replace(/-ex/gi, '');
     name = name.replace(/ gx/gi, '');
+    name = name.replace(/-gx/gi, '');
+    name = name.replaceAll('&', 'and');
     name = name.replace(/[^\w\s]/gi, '');
 
     if (
@@ -90,7 +93,7 @@ export default function Card(props: CardProps | undefined = undefined) {
       name = name.replace('Paldean', 'Paldea');
     }
 
-    name = name.replace(' ', '');
+    name = name.replaceAll(' ', '');
     name = name.toLowerCase();
 
     return name;
