@@ -68,7 +68,7 @@ type CardProps = {
 }
 
 const getApiUrl = () => {
-  const url =
+  const url: string =
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:3000/api/names'
       : 'https://www.cardle.wtf/api/names';
@@ -82,11 +82,16 @@ export async function getCardById(cardId: string) {
   return result;
 }
 
-// handle weird sets that have prefixes
-const getCardId = (id: string, count: number) => {
-  let rand = Math.floor(Math.random() * count - 1) + 1;
-  let prefix = '';
+// helper function to get a valid random number
+const getRandomNumber = (count: number) => {
+  return Math.floor(Math.random() * (count - 1)) + 1;
+}
 
+const getCardId = (id: string, count: number) => {
+  let rand: number = getRandomNumber(count);
+  let prefix: string = '';
+
+  // handle weird sets that have prefixes
   switch (id) {
     case 'dpp':
       prefix += (rand < 10) ? 'DP0' : 'DP';
@@ -133,8 +138,8 @@ const getCardId = (id: string, count: number) => {
     case 'ecard3':
       // these sets have 32 holo cards that don't count toward 
       // the count because they're prefixed with H
-      const holoCount = 32;
-      rand = Math.floor(Math.random() * (count - holoCount) - 1) + 1;
+      const holoCount: number = 32;
+      rand = getRandomNumber(count - holoCount);
       if (rand < holoCount && Math.random() > 0.5) {
         prefix += 'H';
       }
@@ -202,7 +207,7 @@ export async function getRandomCard(set: SetData | undefined = undefined) {
     set = await getRandomSet();
   }
   let randomCard: CardProps;
-  let cardId = `${set.set_id}-${getCardId(set.set_id, set.total)}`;
+  let cardId: string = `${set.set_id}-${getCardId(set.set_id, set.total)}`;
 
   // reroll on safer number if above cardId returns a 404
   try {

@@ -8,7 +8,7 @@ export type SetData = {
 }
 
 const getApiUrl = () => {
-  const url =
+  const url: string =
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:3000/api/sets'
       : 'https://www.cardle.wtf/api/sets';
