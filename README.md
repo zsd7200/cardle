@@ -26,4 +26,4 @@ Then, run the development server:
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. First run will take significantly longer than any subsequent runs as it has to fill the Mongo database with data.
