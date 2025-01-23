@@ -11,22 +11,12 @@ export type InnerCardData = {
   set: {
     id: string,
     name: string,
-    releaseDate: string,
-    images: {
-      symbol: string,
-      logo: string,
-    },
   },
   number: string,
   rarity: string,
   images: {
     small: string,
     large: string,
-  },
-  tcgplayer: {
-    url: string,
-    updatedAt: string,
-    prices: object,
   },
 };
 
@@ -44,11 +34,6 @@ export const dummyCard: InnerCardData = {
   set: {
     id: "?????",
     name: "?????",
-    releaseDate: "?????",
-    images: {
-      symbol: "https://images.pokemontcg.io/base1/symbol.png",
-      logo: "https://images.pokemontcg.io/base1/logo.png"
-    }
   },
   number: "?????",
   rarity: "?????",
@@ -56,18 +41,9 @@ export const dummyCard: InnerCardData = {
     small: "https://images.pokemontcg.io/base1/4.png",
     large: "/back.png"
   },
-  tcgplayer: {
-    url: "?????",
-    updatedAt: "?????",
-    prices: {},
-  },
 }
 
-type CardProps = {
-  data?: InnerCardData
-}
-
-const getApiUrl = () => {
+const getNamesApiUrl = () => {
   const url: string =
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:3000/api/names'
@@ -76,9 +52,18 @@ const getApiUrl = () => {
   return url;
 }
 
+const getCardIdApiUrl = (cardId: string) => {
+  const url: string =
+    process.env.NODE_ENV === 'development'
+      ? `http://localhost:3000/api/card/${cardId}`
+      : `https://www.cardle.wtf/api/card/${cardId}`;
+
+  return url;
+}
+
 export async function getCardById(cardId: string) {
-  const url: string = `https://api.pokemontcg.io/v2/cards/${cardId}`;
-  const result: CardProps = await fetchData(url);
+  const url: string = getCardIdApiUrl(cardId);
+  const result: InnerCardData = await fetchData(url);
   return result;
 }
 
@@ -206,7 +191,7 @@ export async function getRandomCard(set: SetData | undefined = undefined) {
   while (!set || set.set_id == 'cel25c' || set.set_id == 'sve') {
     set = await getRandomSet();
   }
-  let randomCard: CardProps;
+  let randomCard: InnerCardData;
   let cardId: string = `${set.set_id}-${getCardId(set.set_id, set.total)}`;
 
   // reroll on safer number if above cardId returns a 404
@@ -217,11 +202,11 @@ export async function getRandomCard(set: SetData | undefined = undefined) {
     randomCard = await getCardById(cardId);
   }
 
-  return randomCard?.data ?? dummyCard;
+  return randomCard ?? dummyCard;
 }
 
 export async function getMonNamesFromApi() {
-  const url: string = getApiUrl();
+  const url: string = getNamesApiUrl();
   const result = await fetchData(url);
   return result;
 }

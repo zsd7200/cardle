@@ -16,10 +16,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 type CardProps = {
-  data?: InnerCardData
+  data?: InnerCardData,
 }
 
-export default function Card(props: CardProps | undefined = undefined) {
+export default function Card(props: CardProps) {
   const allowedGuesses = 3;
   const [mounted, setMounted] = useState<boolean>(false);
   const [cardData, setCardData] = useState<InnerCardData>(dummyCard);
@@ -38,7 +38,7 @@ export default function Card(props: CardProps | undefined = undefined) {
 
   useEffect(() => {
     const loadCardData = async () => {
-      if (props?.data) {
+      if (props && props.data) {
         setCardData(props.data);
         setImgSrc(props.data.images.large ?? props.data.images.small);
         return;
@@ -57,7 +57,7 @@ export default function Card(props: CardProps | undefined = undefined) {
     loadCardData();
     loadMonNames();
     setMounted(true);
-  }, []);
+  }, [props]);
 
   if (!mounted) {
     return null;

@@ -36,6 +36,12 @@ async function populate() {
     const data: PokeApiData = await fetchData(url);
     
     data.results.forEach(async (mon: InnerPokeApiData) => {
+      const foundMon = await Pokemon.findOne({ name: mon.name }).exec();
+      if (foundMon && foundMon?.name) {
+        console.log(`Pokemon with Name "${mon.name}" already exists. Skipping...`);
+        return;
+      };
+
       const modelData = {
         name: mon.name,
         api_url: mon.url,
