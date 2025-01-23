@@ -37,7 +37,7 @@ export default async function ArchiveDate(props: { params: Params }) {
 
   return (
     <>
-      <Card {...cardData} />
+      <Card data={cardData} />
     </>
   );
 }
