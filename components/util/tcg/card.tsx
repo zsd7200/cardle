@@ -198,7 +198,7 @@ export async function getRandomCard(set: SetData | undefined = undefined) {
   try {
     randomCard = await getCardById(cardId);
   } catch {
-    cardId = `${set.set_id}-${getCardId(set.set_id, set.printedTotal ?? Math.floor(set.total * .75))}`;
+    cardId = `${set.set_id}-${getCardId(set.set_id, isNaN(set.printedTotal) ? Math.floor(set.total * .75) : set.printedTotal)}`;
     randomCard = await getCardById(cardId);
   }
 

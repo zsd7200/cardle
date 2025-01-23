@@ -31,6 +31,7 @@ export default function Card(props: CardProps) {
   const [confettiPieces, setConfettiPieces] = useState<number>(200);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [imgSrc, setImgSrc] = useState<string>(dummyCard.images.large);
+  const [placeholder, setPlaceholder] = useState<string>('');
   const [clipboardState, copyToClipboard] = useCopyToClipboard();
   const { width, height } = useWindowSize();
   const { resolvedTheme } = useTheme();
@@ -54,8 +55,14 @@ export default function Card(props: CardProps) {
       setMonNames(monNamesData);
     }
 
+    const loadPlaceholder = async () => {
+      const base64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkEG6vBwAB0AEbZr2hkgAAAABJRU5ErkJggg==';
+      setPlaceholder(base64);
+    }
+
     loadCardData();
     loadMonNames();
+    loadPlaceholder();
     setMounted(true);
   }, [props]);
 
@@ -278,6 +285,8 @@ https://cardle.wtf/`
                 height={900}
                 unoptimized={true}
                 priority={true}
+                blurDataURL={placeholder}
+                placeholder="blur"
               />
           </div>
         </div>
