@@ -1,9 +1,9 @@
-import Card from "@/components/tcg/card";
+import CardGame from "@/components/tcg/CardGame";
 
 export default async function Home() {
   return (
     <>
-      <Card />
+      <CardGame />
     </>
   );
 }

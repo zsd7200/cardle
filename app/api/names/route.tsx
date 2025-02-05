@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import getMonNames from "@/components/db/pokemon";
+import getMonNames from "@/components/db/Pokemon";
 
 export async function GET() {
   try {

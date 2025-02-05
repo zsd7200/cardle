@@ -1,5 +1,5 @@
-import fetchData from "@/components/util/fetch-data";
-import { SetData, getRandomSet } from "@/components/util/tcg/set";
+import fetchData from "@/components/util/FetchData";
+import { SetData, getRandomSet } from "@/components/util/tcg/SetUtilities";
 
 export type InnerCardData = {
   id: string,

@@ -1,6 +1,6 @@
-import dbConnect from "@/components/db/connect";
-import Pokemon from "@/models/pokemon";
-import fetchData from "@/components/util/fetch-data";
+import dbConnect from "@/components/db/Connect";
+import Pokemon from "@/models/Pokemon";
+import fetchData from "@/components/util/FetchData";
 import { Types } from 'mongoose';
 
 type PokemonCollectionData = {
@@ -116,9 +116,7 @@ const shouldFilterName = (nameArr: Array<string>) => {
     ) {
       return false;
     }
-    
   }
-
   return true;
 }
 

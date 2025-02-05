@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getRandomCard, getMonNamesFromApi, InnerCardData, dummyCard } from '@/components/util/tcg/card';
+import { getRandomCard, getMonNamesFromApi, InnerCardData, dummyCard } from '@/components/util/tcg/CardUtilities';
 import { compareTwoStrings } from 'string-similarity';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
@@ -15,11 +15,11 @@ import Modal from 'react-modal';
 import Link from 'next/link';
 import Image from 'next/image';
 
-type CardProps = {
+type CardGameProps = {
   data?: InnerCardData,
 }
 
-export default function Card(props: CardProps) {
+export default function CardGame(props: CardGameProps) {
   const allowedGuesses = 3;
   const [mounted, setMounted] = useState<boolean>(false);
   const [cardData, setCardData] = useState<InnerCardData>(dummyCard);

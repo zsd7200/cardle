@@ -1,6 +1,6 @@
-import { getCardById } from "@/components/util/tcg/card";
-import Card from "@/components/tcg/card";
-import { getCotd } from "@/components/db/cotd";
+import { getCardById } from "@/components/util/tcg/CardUtilities";
+import CardGame from "@/components/tcg/CardGame";
+import { getCotd } from "@/components/db/Cotd";
 import { redirect } from 'next/navigation';
 import { format } from 'date-fns';
 
@@ -37,7 +37,7 @@ export default async function ArchiveDate(props: { params: Params }) {
 
   return (
     <>
-      <Card data={cardData} />
+      <CardGame data={cardData} />
     </>
   );
 }

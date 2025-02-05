@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { CardCollectionData, getCardsBySetID } from "@/components/db/set";
+import { CardCollectionData, getCardsBySetID } from "@/components/db/Set";
 
 type Params = Promise<{ cardId: string }>;
 

@@ -1,8 +1,8 @@
-import dbConnect from "@/components/db/connect";
-import Set from "@/models/set";
-import fetchData from "@/components/util/fetch-data";
+import dbConnect from "@/components/db/Connect";
+import Set from "@/models/Set";
+import fetchData from "@/components/util/FetchData";
 import { Types } from 'mongoose';
-import { InnerCardData } from '@/components/util/tcg/card';
+import { InnerCardData } from '@/components/util/tcg/CardUtilities';
 
 type SetIdCollectionData = {
   _id: Types.ObjectId,

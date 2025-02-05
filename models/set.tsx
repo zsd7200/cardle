@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { Schema } from 'mongoose';
-import { InnerCardData } from '@/components/util/tcg/card';
+import { InnerCardData } from '@/components/util/tcg/CardUtilities';
 
 export interface SetInterface extends mongoose.Document {
   set_id: string,

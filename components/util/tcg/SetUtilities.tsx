@@ -1,4 +1,4 @@
-import fetchData from "@/components/util/fetch-data";
+import fetchData from "@/components/util/FetchData";
 
 export type SetData = {
   set_id: string,

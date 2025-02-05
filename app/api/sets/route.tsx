@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getSetIDs } from "@/components/db/set";
+import { getSetIDs } from "@/components/db/Set";
 
 export async function GET() {
   try {
