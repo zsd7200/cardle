@@ -3,7 +3,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouseChimney, faClock, faCalendarDays, faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
-import { revalidatePath } from 'next/cache';
+import { revalidateHome } from '@/components/header/Revalidate';
 import { useTheme } from 'next-themes';
 import { useState, useEffect } from 'react';
 
@@ -25,10 +25,6 @@ export default function Header() {
     }
 
     return setTheme('light');
-  }
-
-  const revalidateHome = () => {
-    revalidatePath('/');
   }
 
   return (

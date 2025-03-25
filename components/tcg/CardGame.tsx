@@ -6,7 +6,7 @@ import { compareTwoStrings } from 'string-similarity';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { useWindowSize, useCopyToClipboard } from 'react-use';
-import { revalidatePath } from 'next/cache';
+import { revalidateHome } from '@/components/header/Revalidate';
 import { useTheme } from 'next-themes';
 import { usePathname } from 'next/navigation';
 import { format } from 'date-fns';
@@ -165,10 +165,6 @@ export default function CardGame(props: CardGameProps) {
         break;
     }
     return base;
-  }
-
-  const revalidateHome = () => {
-    revalidatePath('/');
   }
 
   const getModeByPath = () => {
