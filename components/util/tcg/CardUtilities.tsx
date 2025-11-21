@@ -76,6 +76,8 @@ const getCardId = (id: string, count: number) => {
   let rand: number = getRandomNumber(count);
   let prefix: string = '';
 
+  console.warn('rand: ' + rand);
+
   // handle weird sets that have prefixes
   switch (id) {
     case 'dpp':
@@ -191,8 +193,13 @@ export async function getRandomCard(set: SetData | undefined = undefined) {
   while (!set || set.set_id == 'cel25c' || set.set_id == 'sve') {
     set = await getRandomSet();
   }
+  console.warn('setId: ' + set.set_id);
+  console.warn('setTotal: ' + set.total);
+
   let randomCard: InnerCardData;
   let cardId: string = `${set.set_id}-${getCardId(set.set_id, set.total)}`;
+
+  console.warn('cardId: ' + cardId);
 
   // reroll on safer number if above cardId returns a 404
   try {
@@ -201,6 +208,8 @@ export async function getRandomCard(set: SetData | undefined = undefined) {
     cardId = `${set.set_id}-${getCardId(set.set_id, isNaN(set.printedTotal) ? Math.floor(set.total * .75) : set.printedTotal)}`;
     randomCard = await getCardById(cardId);
   }
+
+  console.warn('randomCard: ' + randomCard.name + ' ' + randomCard.id);
 
   return randomCard ?? dummyCard;
 }
