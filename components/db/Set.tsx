@@ -34,12 +34,14 @@ export type CardCollectionData = {
   data: Array<InnerCardData>,
 }
 
+// eslint-disable-next-line
 async function getCount() {
   const url: string = `https://api.pokemontcg.io/v2/sets/`;
   const data: PokemonTcgApiSetData = await fetchData(url);
   return data.count;
 }
 
+// eslint-disable-next-line
 async function populate() {
   await dbConnect();
 
