@@ -143,12 +143,19 @@ export async function getSetIDs() {
     }
 
     // only poll pokeapi if 30 days has passed and if count has changed
+
+    // pokemon tcg api is now too slow due to millions of requests
+    // temporarily disable grabbing new sets until we're able to move to scrydex (paid)
+    // or use scrydex's free json files from github:
+    // https://github.com/PokemonTCG/pokemon-tcg-data/tree/master/cards/en
+    /*
     const count = await getCount();
     if (!lastSet || setIdCollection.length < count) {
       await populate();
       const updatedIdCollection: Array<SetIdCollectionData> = await Set.find({}, '_id set_id updated').exec();
       return updatedIdCollection;
     }
+    */
 
     return setIdCollection;
   } catch (err) {
