@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSetIDs } from "@/components/db/Set";
 
-export const runtime = 'nodejs';
-
 export async function GET() {
   try {
     const res = await getSetIDs();

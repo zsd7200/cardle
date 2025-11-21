@@ -17,7 +17,7 @@ async function populate(date: string | undefined = undefined) {
     const cotd = await COTD.create(modelData);
     return cotd;
   } catch (err) {
-    console.error('Error populating: ' + err);
+    console.warn('Error populating: ' + err);
   }
 }
 
@@ -33,6 +33,6 @@ export async function getCotd(date: string | undefined = undefined) {
 
     return cotd;
   } catch (err) {
-    console.error('Error getting COTD: ' + err);
+    console.warn('Error getting COTD: ' + err);
   }
 }
