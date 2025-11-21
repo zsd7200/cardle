@@ -193,6 +193,7 @@ export async function getRandomCard(set: SetData | undefined = undefined) {
   while (!set || set.set_id == 'cel25c' || set.set_id == 'sve') {
     set = await getRandomSet();
   }
+  console.warn('set: ' + JSON.stringify(set));
   console.warn('setId: ' + set.set_id);
   console.warn('setTotal: ' + set.total);
 
