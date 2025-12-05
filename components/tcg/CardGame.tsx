@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { getRandomCard, getMonNamesFromApi, InnerCardData, dummyCard } from '@/components/util/tcg/CardUtilities';
 import { compareTwoStrings } from 'string-similarity';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -36,6 +36,7 @@ export default function CardGame(props: CardGameProps) {
   const { width, height } = useWindowSize();
   const { resolvedTheme } = useTheme();
   const pathname = usePathname();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const loadCardData = async () => {
@@ -233,12 +234,24 @@ https://cardle.wtf/`
     }
   }
 
+  const resetGame = () => {
+    revalidateHome();
+    setGuessesRemaining(allowedGuesses);
+    setGuessesUsed(0);
+    setWinState(false);
+    setLoseState(false);
+    setIsModalOpen(false);
+    if (inputRef.current?.value) {
+      inputRef.current.value = '';
+    }
+  };
+
   function Buttons() {
     return (
       <>
         <Link 
           href={(getModeByPath() == 'daily' || getModeByPath() == 'other') ? '/' : '/archive'}
-          onClick={revalidateHome}
+          onClick={resetGame}
           className="bg-purple-400 hover:bg-purple-600 active:bg-purple-800 text-white font-bold py-1 px-3 rounded transition w-[35%] text-center" 
         >
           {getModeByPath() == 'daily' &&
@@ -324,6 +337,7 @@ https://cardle.wtf/`
                 list="mon"
                 name="mon"
                 placeholder={ monNames[Math.floor(Math.random() * monNames.length)] }
+                ref={inputRef}
                 className="
                   bg-white dark:bg-white
                   text-black dark:text-black
