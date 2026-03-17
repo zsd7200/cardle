@@ -73,6 +73,10 @@ export async function getRandomCard(set: SetData | undefined = undefined) {
   }
 
   const setCardIds = await getCardsBySetIdFromApi(set.set_id);
+  if (setCardIds.length === 0) {
+    return getRandomCard();
+  }
+
   const cardId: string = setCardIds[Math.floor(Math.random() * setCardIds.length)].id;
   const randomCard: CardData = await getCardById(cardId);
 
