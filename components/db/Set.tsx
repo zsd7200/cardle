@@ -94,20 +94,20 @@ async function populate() {
 export async function getCardsBySetID(set_id: string) {
   await dbConnect();
   try {
-    const cardCollection: Array<CardCollectionData> = await Set.find({ set_id: set_id }, 'data').exec();
+    const cardCollection: CardCollectionData = await Set.findOne({ set_id: set_id }, 'data').exec();
     return cardCollection;
   } catch (err) {
     console.log('Error getting Card collection: ' + err);
   }
 
-  return [];
+  return undefined;
 }
 
-export async function getSetData() {
+export async function getSetIDs() {
   await dbConnect();
 
   try {
-    const setIdCollection: Array<SetIdCollectionData> = await Set.find({}, '_id set_id cardCount data updated').exec();
+    const setIdCollection: Array<SetIdCollectionData> = await Set.find({}, '_id set_id updated').exec();
     const lastSet: SetIdCollectionData = setIdCollection[setIdCollection.length - 1];
 
     if (lastSet && lastSet.updated) {

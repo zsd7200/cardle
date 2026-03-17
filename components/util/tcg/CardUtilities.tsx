@@ -1,5 +1,5 @@
 import fetchData from "@/components/util/FetchData";
-import { SetData, getRandomSet } from "@/components/util/tcg/SetUtilities";
+import { SetData, getRandomSet, getCardsBySetIdFromApi } from "@/components/util/tcg/SetUtilities";
 
 export type RawCardBriefData = {
   id: string,
@@ -68,16 +68,12 @@ export async function getCardById(cardId: string) {
 
 export async function getRandomCard(set: SetData | undefined = undefined) {
   // roll a random set if set isn't passed in
-  // or if it's a crazy set that can't just
-  // have a random number tacked onto it
-  while (!set || set.set_id == 'cel25c' || set.set_id == 'sve') {
+  if (!set) {
     set = await getRandomSet();
-    if (!set.data || set.data.length == 0) {
-      set = undefined;
-    }
   }
 
-  const cardId: string = set.data[Math.floor(Math.random() * set.data.length)].id;
+  const setCardIds = await getCardsBySetIdFromApi(set.set_id);
+  const cardId: string = setCardIds[Math.floor(Math.random() * setCardIds.length)].id;
   const randomCard: CardData = await getCardById(cardId);
 
   if (!randomCard.images.high && !randomCard.images.low) {

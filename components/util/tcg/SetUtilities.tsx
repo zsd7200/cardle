@@ -1,3 +1,4 @@
+import { CardCollectionData } from "@/components/db/Set";
 import fetchData from "@/components/util/FetchData";
 import { RawCardBriefData } from "@/components/util/tcg/CardUtilities";
 
@@ -30,4 +31,10 @@ export async function getRandomSet() {
   const sets: Array<SetData> = await getAllSetsFromApi();
   const randomSet: SetData = sets[Math.floor(Math.random() * sets.length)];
   return randomSet;
+}
+
+export async function getCardsBySetIdFromApi(setId: string) {
+  const url: string = `${getApiUrl()}/${setId}`;
+  const cards: CardCollectionData = await fetchData(url);
+  return cards.data;
 }

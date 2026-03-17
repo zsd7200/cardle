@@ -30,7 +30,7 @@ const SetSchema = new mongoose.Schema<SetInterface>({
   data: {
     type: Schema.Types.Mixed,
     required: true,
-  }
+  },
 }, {
   timestamps: {
     createdAt: 'created',
