@@ -103,7 +103,7 @@ export default function Calendar() {
                       'text-gray-300 dark:text-gray-600 hover:cursor-default',
                     isToday(day) && 
                       'text-gray-100 bg-purple-600 active:bg-purple-800 font-semibold',
-                    'mx-auto flex h-10 w-10 md:h-20 md:w-20 items-center justify-center rounded-full transition-[background] transition-[background-color]'
+                    'mx-auto flex h-10 w-10 md:h-20 md:w-20 items-center justify-center rounded-full transition-[background]'
                   )}
                 >
                   <time dateTime={format(day, 'yyyy-MM-dd')}>
