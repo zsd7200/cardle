@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { getRandomCard, getMonNamesFromApi, InnerCardData, dummyCard } from '@/components/util/tcg/CardUtilities';
+import { getRandomCard, getMonNamesFromApi, CardData, dummyCard } from '@/components/util/tcg/CardUtilities';
 import { compareTwoStrings } from 'string-similarity';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
@@ -16,13 +16,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 type CardGameProps = {
-  data?: InnerCardData,
+  data?: CardData,
 }
 
 export default function CardGame(props: CardGameProps) {
   const allowedGuesses = 3;
   const [mounted, setMounted] = useState<boolean>(false);
-  const [cardData, setCardData] = useState<InnerCardData>(dummyCard);
+  const [cardData, setCardData] = useState<CardData>(dummyCard);
   const [monNames, setMonNames] = useState<Array<string>>(['Pokémon']);
   const [guessesRemaining, setGuessesRemaining] = useState<number>(allowedGuesses);
   const [guessesUsed, setGuessesUsed] = useState<number>(0);
@@ -30,7 +30,7 @@ export default function CardGame(props: CardGameProps) {
   const [loseState, setLoseState] = useState<boolean>(false);
   const [confettiPieces, setConfettiPieces] = useState<number>(200);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [imgSrc, setImgSrc] = useState<string>(dummyCard.images.large);
+  const [imgSrc, setImgSrc] = useState<string>(dummyCard.images.high ?? dummyCard.images.low ?? '/back.png');
   const [placeholder, setPlaceholder] = useState<string>('');
   const [clipboardState, copyToClipboard] = useCopyToClipboard();
   const { width, height } = useWindowSize();
@@ -42,13 +42,13 @@ export default function CardGame(props: CardGameProps) {
     const loadCardData = async () => {
       if (props && props.data) {
         setCardData(props.data);
-        setImgSrc(props.data.images.large ?? props.data.images.small);
+        setImgSrc(props.data.images.high ?? props.data.images.low ?? '/back.png');
         return;
       }
   
       const randomCardData = await getRandomCard();
       setCardData(randomCardData);
-      setImgSrc(randomCardData.images.large ?? randomCardData.images.small);
+      setImgSrc(randomCardData.images.high ?? randomCardData.images.low ?? '/back.png');
     }
 
     const loadMonNames = async () => {
@@ -287,7 +287,7 @@ https://cardle.wtf/`
           <div className="overflow-hidden max-h-[700px] w-2/3 lg:w-fit ">
             <Image 
                 src={imgSrc}
-                onError={() => setImgSrc(cardData.images.small)}
+                onError={() => setImgSrc('/back.png')}
                 alt="Pokémon Card"
                 className={cardClasses()}
                 width={650}
@@ -309,22 +309,15 @@ https://cardle.wtf/`
           <div className="flex flex-col pb-[15px]">
             <div className="flex justify-between">
               <span>Classification:</span>
-              <span>{cardData.supertype ?? 'Unknown Classification'}</span>
+              <span>{cardData.category ?? 'Unknown Classification'}</span>
             </div>
             <div className="flex justify-between">
-              <span>Subclasses:</span>
-              <div>
-                {(cardData.subtypes)
-                  ? cardData.subtypes?.map((type: string, i: number) => (
-                      <span key={type}>{ (i ? ', ' : '') + type }</span>
-                    ))
-                  : <span>No Subclasses</span>
-                }
-              </div>
+              <span>Illustrator:</span>
+              <span>{cardData.illustrator ?? 'Unknown Illustrator'}</span>
             </div>
             <div className="flex justify-between">
               <span>Set:</span>
-              <span>{cardData.set.name ?? 'Unknown Set'}</span>
+              <span>{cardData.setInfo.name ?? 'Unknown Set'}</span>
             </div>
             <div className="flex justify-between">
               <span>Rarity:</span>

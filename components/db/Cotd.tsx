@@ -10,14 +10,14 @@ async function populate(date: string | undefined = undefined) {
     const card = await getRandomCard();
     const modelData = {
       card_id: card.id,
-      set_id: card.set.id,
+      set_id: card.setInfo.id,
       date: currDate,
     };
     console.log(modelData);
     const cotd = await COTD.create(modelData);
     return cotd;
   } catch (err) {
-    console.warn('Error populating: ' + err);
+    console.log('Error populating: ' + err);
   }
 }
 
@@ -33,6 +33,6 @@ export async function getCotd(date: string | undefined = undefined) {
 
     return cotd;
   } catch (err) {
-    console.warn('Error getting COTD: ' + err);
+    console.log('Error getting COTD: ' + err);
   }
 }
