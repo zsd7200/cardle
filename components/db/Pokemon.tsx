@@ -46,7 +46,6 @@ async function populate() {
         name: mon.name,
         api_url: mon.url,
       };
-      console.log(modelData);
       await Pokemon.create(modelData);
     });
   } catch (err) {

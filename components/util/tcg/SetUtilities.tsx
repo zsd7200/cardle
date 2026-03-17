@@ -1,10 +1,14 @@
 import fetchData from "@/components/util/FetchData";
+import { RawCardBriefData } from "@/components/util/tcg/CardUtilities";
 
 export type SetData = {
   set_id: string,
   name: string,
-  total: number,
-  printedTotal: number,
+  cardCount: {
+    total: number,
+    official: number,
+  },
+  data: Array<RawCardBriefData>,
 }
 
 const getApiUrl = () => {

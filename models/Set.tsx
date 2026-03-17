@@ -1,13 +1,15 @@
 import mongoose from 'mongoose';
 import { Schema } from 'mongoose';
-import { InnerCardData } from '@/components/util/tcg/CardUtilities';
+import { RawCardBriefData } from '@/components/util/tcg/CardUtilities';
 
 export interface SetInterface extends mongoose.Document {
   set_id: string,
   name: string,
-  total: number,
-  printedTotal: number,
-  data: Array<InnerCardData>,
+  cardCount: {
+    total: number,
+    official: number,
+  },
+  data: Array<RawCardBriefData>,
   created?: Date,
   updated?: Date,
 };
@@ -21,12 +23,8 @@ const SetSchema = new mongoose.Schema<SetInterface>({
     type: String,
     required: true,
   },
-  total: {
-    type: Number,
-    required: true,
-  },
-  printedTotal: {
-    type: Number,
+  cardCount: {
+    type: Schema.Types.Mixed,
     required: true,
   },
   data: {

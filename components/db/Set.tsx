@@ -2,107 +2,86 @@ import dbConnect from "@/components/db/Connect";
 import Set from "@/models/Set";
 import fetchData from "@/components/util/FetchData";
 import { Types } from 'mongoose';
-import { InnerCardData } from '@/components/util/tcg/CardUtilities';
+import { RawCardBriefData } from '@/components/util/tcg/CardUtilities';
 
 type SetIdCollectionData = {
   _id: Types.ObjectId,
   set_id: string,
-  total: number,
-  printedTotal: number,
+  cardCount: {
+    total: number,
+    official: number,
+  },
   updated?: Date,
 }
 
-type InnerPokemonTcgApiData = {
+type InnerTcgDexApiData = {
   id: string,
   name: string,
-  total: number,
-  printedTotal: number,
+  cardCount: {
+    total: number,
+    official: number,
+  },
 }
 
-type PokemonTcgApiSetData = {
-  data: Array<InnerPokemonTcgApiData>,
-  count: number,
-}
-
-type PokemonTcgApiCardData = {
-  data: Array<InnerCardData>,
-  count: number,
+type TcgDexApiCardData = {
+  cardCount: {
+    firstEd: number,
+    holo: number,
+    normal: number,
+    official: number,
+    reverse: number,
+    total: number,
+  },
+  cards: Array<RawCardBriefData>,
 }
 
 export type CardCollectionData = {
   _id: Types.ObjectId,
-  data: Array<InnerCardData>,
+  data: Array<RawCardBriefData>,
 }
 
-// eslint-disable-next-line
 async function getCount() {
-  const url: string = `https://api.pokemontcg.io/v2/sets/`;
-  const data: PokemonTcgApiSetData = await fetchData(url);
-  return data.count;
+  const url: string = `https://api.tcgdex.net/v2/en/sets/`;
+  const data: Array<InnerTcgDexApiData> = await fetchData(url);
+  return data.length;
 }
 
-// eslint-disable-next-line
 async function populate() {
   await dbConnect();
 
   // wait helper function rather than wrapping whole for loop in setTimeout
   const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  const formatCardData = (data: Array<InnerCardData>) => {
-    const newData: Array<InnerCardData> = [];
-
-    for (let i = 0; i < data.length; i++) {
-      const cardData: InnerCardData = {
-        id: data[i].id,
-        name: data[i].name,
-        supertype: data[i].supertype,
-        subtypes: data[i].subtypes,
-        hp: data[i].hp,
-        types: data[i].types,
-        set: {
-          id: data[i].set.id,
-          name: data[i].set.name,
-        },
-        number: data[i].number,
-        rarity: data[i].rarity,
-        images: data[i].images,
-      }
-      
-      newData.push(cardData);
-    }
-
-    return newData;
-  };
-
   try {
-    const url: string = `https://api.pokemontcg.io/v2/sets/`;
-    const data: PokemonTcgApiSetData = await fetchData(url);
+    const url: string = `https://api.tcgdex.net/v2/en/sets/`;
+    const data: Array<InnerTcgDexApiData> = await fetchData(url);
     
     // was a foreach, but wanted to space out timing since
     // this loop includes api calls
-    for (let i = 0; i < data.data.length; i++) {
-      const set = data.data[i];
+    for (let i = 0; i < data.length; i++) {
+      const set = data[i];
       const foundSet = await Set.findOne({ set_id: set.id }).exec();
       if (foundSet && foundSet?.data) {
         console.log(`Set with ID "${set.id}" already exists with proper data. Skipping...`);
         continue;
       };
 
-      const cardUrl: string = `https://api.pokemontcg.io/v2/cards/?q=set.id:${set.id}`;
-      const cardData: PokemonTcgApiCardData = await fetchData(cardUrl);
-      const formattedData = formatCardData(cardData.data);
+      const setUrl: string = `https://api.tcgdex.net/v2/en/sets/${set.id}`;
+      const setData: TcgDexApiCardData = await fetchData(setUrl);
       const modelData = {
         set_id: set.id,
         name: set.name,
-        total: set.total,
-        printedTotal: set.printedTotal,
-        data: formattedData,
+        cardCount: {
+          total: set.cardCount.total,
+          official: set.cardCount.official,
+        },
+        data: setData.cards,
       };
 
       console.log(`${(foundSet) ? 'Updating' : 'Inserting' } Set with ID "${set.id}"...`);
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       (foundSet) 
-        ? await Set.findOneAndUpdate({ set_id: set.id }, { data: formattedData })
+        ? await Set.findOneAndUpdate({ set_id: set.id }, { data: setData.cards })
         : await Set.create(modelData);
       console.log(`${(foundSet) ? 'Updated' : 'Inserted' }, waiting 5s to continue...`);
       await wait(5000);
@@ -124,10 +103,11 @@ export async function getCardsBySetID(set_id: string) {
   return [];
 }
 
-export async function getSetIDs() {
+export async function getSetData() {
   await dbConnect();
+
   try {
-    const setIdCollection: Array<SetIdCollectionData> = await Set.find({}, '_id set_id total printedTotal updated').exec();
+    const setIdCollection: Array<SetIdCollectionData> = await Set.find({}, '_id set_id cardCount data updated').exec();
     const lastSet: SetIdCollectionData = setIdCollection[setIdCollection.length - 1];
 
     if (lastSet && lastSet.updated) {
@@ -144,20 +124,13 @@ export async function getSetIDs() {
       Set.findOneAndUpdate({ _id: lastSet._id }, { updated: new Date().toISOString() });
     }
 
-    // only poll pokeapi if 30 days has passed and if count has changed
-
-    // pokemon tcg api is now too slow due to millions of requests
-    // temporarily disable grabbing new sets until we're able to move to scrydex (paid)
-    // or use scrydex's free json files from github:
-    // https://github.com/PokemonTCG/pokemon-tcg-data/tree/master/cards/en
-    /*
+    // only poll api if 30 days has passed and if count has changed
     const count = await getCount();
     if (!lastSet || setIdCollection.length < count) {
       await populate();
       const updatedIdCollection: Array<SetIdCollectionData> = await Set.find({}, '_id set_id updated').exec();
       return updatedIdCollection;
     }
-    */
 
     return setIdCollection;
   } catch (err) {
