@@ -246,6 +246,28 @@ https://cardle.wtf/`
     }
   };
 
+  const capitalize = (str: string) => {
+    const doNotCap = ['a', 'an', 'and', 'as', 'at', 'but', 'by', 'for', 'in', 'nor', 'of', 'on', 'or', 'the', 'up'];
+    const splitStr = str.split(' ');
+
+    if (splitStr.length == 1) return str;
+
+    for (let i = 0; i < splitStr.length; i++) {
+      if (doNotCap.includes(splitStr[i])) continue;
+
+      const firstLetter = splitStr[i].charAt(0).toUpperCase();
+      const restOfWord = splitStr[i].slice(1);
+      splitStr[i] = firstLetter + restOfWord;
+    }
+
+    return splitStr.join(' ');
+  }
+
+  const isFromPocket = (setId: string) => {
+    const firstChar = setId.charAt(0);
+    return firstChar !== firstChar.toLowerCase();
+  }
+
   function Buttons() {
     return (
       <>
@@ -312,16 +334,21 @@ https://cardle.wtf/`
               <span>{(cardData.category) ? cardData.category.replace('Pokemon', 'Pokémon') : 'Unknown Classification'}</span>
             </div>
             <div className="flex justify-between">
-              <span>Illustrator:</span>
-              <span>{cardData.illustrator ?? 'Unknown Illustrator'}</span>
-            </div>
-            <div className="flex justify-between">
               <span>Set:</span>
-              <span>{cardData.setInfo.name ?? 'Unknown Set'}</span>
+              <div>
+                <span>{(cardData.setInfo.name) ? capitalize(cardData.setInfo.name) : 'Unknown Set'}</span>
+                {(isFromPocket(cardData.setInfo.id)) &&
+                  <span className="pl-2 text-xs">(Pokémon TCG Pocket)</span>
+                }
+              </div>
             </div>
             <div className="flex justify-between">
               <span>Rarity:</span>
-              <span>{cardData.rarity ?? 'Unknown Rarity'}</span>
+              <span>{(cardData.rarity) ? capitalize(cardData.rarity) : 'Unknown Rarity'}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Illustrator:</span>
+              <span>{cardData.illustrator ?? 'Unknown Illustrator'}</span>
             </div>
           </div>
           <div className="flex justify-between items-center flex-col gap-[10px] md:flex-row md:gap-[0px]">
