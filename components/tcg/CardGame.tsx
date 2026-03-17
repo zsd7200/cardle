@@ -309,7 +309,7 @@ https://cardle.wtf/`
           <div className="flex flex-col pb-[15px]">
             <div className="flex justify-between">
               <span>Classification:</span>
-              <span>{cardData.category ?? 'Unknown Classification'}</span>
+              <span>{(cardData.category) ? cardData.category.replace('Pokemon', 'Pokémon') : 'Unknown Classification'}</span>
             </div>
             <div className="flex justify-between">
               <span>Illustrator:</span>
