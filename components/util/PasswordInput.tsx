@@ -5,11 +5,10 @@ import fetchData from "@/components/util/FetchData";
 
 type PasswordInputProps = {
   children: React.ReactNode,
-  password?: string,
   hint?: string,
 }
 
-export default function PasswordInput({children, password, hint} : PasswordInputProps) {
+export default function PasswordInput({children, hint} : PasswordInputProps) {
   const [isVerified, setIsVerified] = useState<boolean>(false);
   const [isWrong, setIsWrong] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
