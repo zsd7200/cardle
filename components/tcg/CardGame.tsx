@@ -207,7 +207,7 @@ export default function CardGame(props: CardGameProps) {
         copyToClipboard(
 `${messageStr} - ${date}
 ${getGuessStr()}
-https://cardle.wtf/daily`
+${process.env.NEXT_PUBLIC_PRODUCTION_URL ?? 'http://localhost:3000'}/daily`
         );
         break;
       // archive
@@ -221,14 +221,14 @@ https://cardle.wtf/daily`
         copyToClipboard(
 `${archiveMessageStr}
 ${getGuessStr()}
-https://cardle.wtf/archive/${archiveDate}`
+${process.env.NEXT_PUBLIC_PRODUCTION_URL ?? 'http://localhost:3000'}/archive/${archiveDate}`
         );
         break;
       // homepage
       default:
         copyToClipboard(
 `I'm having fun on Cardle!
-https://cardle.wtf/`
+${process.env.NEXT_PUBLIC_PRODUCTION_URL ?? 'http://localhost:3000'}/`
         );
         break;
     }

@@ -114,7 +114,7 @@ export async function getSetIDs() {
       const lastDate: Date = new Date(lastSet.updated);
       const currDate: Date = new Date();
       const dateDiff: number = currDate.valueOf() - lastDate.valueOf();
-      const UPDATE_TIMEOUT_MS: number = 2592000000; // 30 days in MS
+      const UPDATE_TIMEOUT_MS: number = 0; // 30 days in MS
 
       if (dateDiff < UPDATE_TIMEOUT_MS) {
         return setIdCollection; // return early if 30 days has not passed since last update

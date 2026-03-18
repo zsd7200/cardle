@@ -8,6 +8,7 @@ Create a `.env` with the following entries:
 ```
 MONGODB_URI=
 POPULATE_PASS=
+NEXT_PUBLIC_PRODUCTION_URL=
 ```
 
 `MONGODB_URI` is the connection string to your MongoDB database. A free-tier Mongo database can be made using [MongoDB Cloud Services](https://www.mongodb.com/products/platform/cloud).
@@ -16,6 +17,8 @@ POPULATE_PASS=
 
 > [!CAUTION]
 > The value entered for `POPULATE_PASS` may not be secure. Enter a random string, do not enter anything that is used across multiple accounts or services.
+
+`NEXT_PUBLIC_PRODUCTION_URL` is the URL used after running `npm run build` and `npm run start`. If left empty, will default to `http://localhost:3000`. Should be entered **without** trailing slash.
 
 Then, run install command:
 

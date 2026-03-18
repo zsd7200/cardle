@@ -17,7 +17,7 @@ export default function PasswordInput({children, hint} : PasswordInputProps) {
     const url: string =
     process.env.NODE_ENV === 'development'
         ? 'http://localhost:3000/api/pass'
-        : 'https://www.cardle.wtf/api/pass';
+        : `${process.env.NEXT_PUBLIC_PRODUCTION_URL ?? 'http://localhost:3000'}/api/pass`;
     
     return url;
   }

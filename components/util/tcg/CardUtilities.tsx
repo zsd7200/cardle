@@ -46,7 +46,7 @@ const getNamesApiUrl = () => {
   const url: string =
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:3000/api/names'
-      : 'https://www.cardle.wtf/api/names';
+      : `${process.env.NEXT_PUBLIC_PRODUCTION_URL ?? 'http://localhost:3000'}/api/names`;
 
   return url;
 }
@@ -55,7 +55,7 @@ const getCardIdApiUrl = (cardId: string) => {
   const url: string =
     process.env.NODE_ENV === 'development'
       ? `http://localhost:3000/api/card/${cardId}`
-      : `https://www.cardle.wtf/api/card/${cardId}`;
+      : `${process.env.NEXT_PUBLIC_PRODUCTION_URL ?? 'http://localhost:3000'}/api/card/${cardId}`;
 
   return url;
 }

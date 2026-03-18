@@ -16,7 +16,7 @@ const getApiUrl = () => {
   const url: string =
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:3000/api/sets'
-      : 'https://www.cardle.wtf/api/sets';
+      : `${process.env.NEXT_PUBLIC_PRODUCTION_URL ?? 'http://localhost:3000'}/api/sets`;
 
   return url;
 }
