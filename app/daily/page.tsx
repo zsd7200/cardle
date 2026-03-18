@@ -1,5 +1,5 @@
 import { getCardById } from "@/components/util/tcg/CardUtilities";
-import Card from "@/components/tcg/CardGame";
+import CardGame from "@/components/tcg/CardGame";
 import { getCotd } from "@/components/db/Cotd";
 
 export default async function Daily() {
@@ -8,7 +8,7 @@ export default async function Daily() {
 
   return (
     <>
-      <Card data={cardData} />
+      <CardGame data={cardData} />
     </>
   );
 }
