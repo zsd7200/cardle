@@ -268,6 +268,15 @@ https://cardle.wtf/`
     return firstChar !== firstChar.toLowerCase();
   }
 
+  const formatSetName = (setName: string) => {
+    switch(setName) {
+      case 'Yellow A Alternate':
+        return 'Shiny Vault (Hidden Fates)';
+      default:
+        return setName.replace("Macdonald's", "McDonald's");
+    }
+  }
+
   function Buttons() {
     return (
       <>
@@ -336,7 +345,7 @@ https://cardle.wtf/`
             <div className="flex justify-between">
               <span>Set:</span>
               <div>
-                <span>{(cardData.setInfo.name) ? capitalize(cardData.setInfo.name) : 'Unknown Set'}</span>
+                <span>{(cardData.setInfo.name) ? formatSetName(capitalize(cardData.setInfo.name)) : 'Unknown Set'}</span>
                 {(isFromPocket(cardData.setInfo.id)) &&
                   <span className="pl-2 text-xs">(Pokémon TCG Pocket)</span>
                 }

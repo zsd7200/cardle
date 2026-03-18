@@ -21,7 +21,7 @@ const getApiUrl = () => {
   return url;
 }
 
-async function getAllSetsFromApi() {
+export async function getAllSetsFromApi() {
   const url: string = getApiUrl();
   const result: Array<SetData> = await fetchData(url);
   return result;

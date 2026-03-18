@@ -7,9 +7,15 @@ Create a `.env` with the following entries:
 
 ```
 MONGODB_URI=
+POPULATE_PASS=
 ```
 
 `MONGODB_URI` is the connection string to your MongoDB database. A free-tier Mongo database can be made using [MongoDB Cloud Services](https://www.mongodb.com/products/platform/cloud).
+
+`POPULATE_PASS` is the password you will use to enter the `/populate` page, which allows you to fill the database with card data from [TCGDex](https://tcgdex.dev/). If not entered, will be a newly randomly generated GUID string every time the page is rendered.
+
+> [!CAUTION]
+> The value entered for `POPULATE_PASS` may not be secure. Enter a random string, do not enter anything that is used across multiple accounts or services.
 
 Then, run install command:
 
@@ -23,4 +29,6 @@ Then, run the development server:
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. First run will take significantly longer than any subsequent runs as it has to fill the Mongo database with data.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. 
+
+You may need to visit `/api/sets` manually to populate the set data, then you can optionally visit the `/populate` page to fill the database with local data to make it run a bit faster.
